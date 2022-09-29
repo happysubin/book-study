@@ -37,7 +37,7 @@ public class DiscountCondition {
         this.dayOfWeek = dayOfWeek;
     }
 
-    public LocalTime getStartTime() {
+    public LocalTime getWhenScreened() {
         return startTime;
     }
 

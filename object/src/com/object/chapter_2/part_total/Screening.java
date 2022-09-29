@@ -21,7 +21,7 @@ public class Screening {
         return movie.calculateMovieFee(this).times(audienceCount);  //1인당 예매 요금 * 인원 수
     }
 
-    public LocalDateTime getStartTime() {
+    public LocalDateTime getWhenScreened() {
         return whenScreened;
     }
 

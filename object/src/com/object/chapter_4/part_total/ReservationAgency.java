@@ -19,7 +19,7 @@ public class ReservationAgency {
             if(condition.getType() == DiscountConditionType.PERIOD){
                 discountable = screening
                         .getWhenScreened().getDayOfWeek().equals(condition.getDayOfWeek()) &&
-                        condition.getStartTime().compareTo(screening.getWhenScreened().toLocalTime()) <= 0 &&
+                        condition.getWhenScreened().compareTo(screening.getWhenScreened().toLocalTime()) <= 0 &&
                         condition.getEndTime().compareTo(screening.getWhenScreened().toLocalTime()) >= 0;
             }
             else {
