@@ -1,8 +1,7 @@
-package com.object.chater_6.part_total;
+package com.object.chapter_6.part_total;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAmount;
 
 public class Event { //특정 일자에 실제로 발생하는 사건 -> 이벤트
 

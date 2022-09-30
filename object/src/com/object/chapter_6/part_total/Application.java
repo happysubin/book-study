@@ -1,4 +1,4 @@
-package com.object.chater_6.part_total;
+package com.object.chapter_6.part_total;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
