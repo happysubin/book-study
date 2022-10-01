@@ -133,18 +133,18 @@
 ### Employee Type (추상 데이터 타입 기준)
 * 추상 데이터 타입은 오퍼레이션을 기준으로 타입을 묶는다
 
-| 오퍼레이션                                            | 정규직원                         | 아르바이트 직원                                              |
-|--------------------------------------------------|------------------------------|-------------------------------------------------------|
-| <span style="color:red">calculatePay()</span>    | basePay - (basePay * taxRate) | (basePay * timeCard) - (basePay * timeCard) * taxRate |
-| <span style="color:red">monthlyBasePay()</span>  | basePay                       | 0                                                     |
+| 오퍼레이션                                       | 정규직원                         | 아르바이트 직원                                              |
+|---------------------------------------------|------------------------------|-------------------------------------------------------|
+| <span style="color:red">calculatePay()</span> | basePay - (basePay * taxRate) | (basePay * timeCard) - (basePay * timeCard) * taxRate |
+| <span style="color:red">monthlyBasePay()</span> | basePay                       | 0                                                     |
 
 ### Employee Type (객체지향 타입 기준)
 * 객체지향은 타입을 기준으로 오퍼레이션을 묶는다.
 
-| 오퍼레이션          | <span style="color:red">정규직원</span>                   | <span style="color:red">아르바이트 직원</span> |
-|----------------|-------------------------------------------------------|-----------------------------------------|
-| calculatePay() basePay - (basePay * taxRate) | (basePay * timeCard) - (basePay * timeCard) * taxRate |
-| monthlyBasePay() | basePay                                               | 0                                       |
+| 오퍼레이션                                         | <span style="color:red">정규직원</span> | <span style="color:red">아르바이트 직원</span> |
+|-----------------------------------------------|-------------------------------------|-----------------------------------------|
+| calculatePay() |  basePay - (basePay * taxRate)      | (basePay * timeCard) - (basePay * timeCard) * taxRate |
+| monthlyBasePay()                              | basePay                             | 0                                       |
 
 * 이제 추상 데이터 타입에서 클래스로 변경하는 예제롤 살펴보았다.
 * 추상 클래스를 이용해 클라이언트가 메시지를 수신할 객체의 구체적인 클래스를 고민할 필요가 없어졌다.
