@@ -1,4 +1,4 @@
-package com.object.부록_3;
+package com.object.부록_C;
 
 public  class Dragon extends Monster{
 
