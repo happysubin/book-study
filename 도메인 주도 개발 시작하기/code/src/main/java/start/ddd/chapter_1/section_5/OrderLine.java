@@ -24,7 +24,7 @@ public class OrderLine {
 //        this.amounts = amounts;
 //    }
 
-    private int calculateAmounts(){
+    private int calculateTotalAmounts(){
         return price.getValue() * quantity;
     }
 
@@ -32,8 +32,8 @@ public class OrderLine {
         return product;
     }
 
-    public Money getPrice() {
-        return price;
+    public int getPrice() {
+        return price.getValue();
     }
 
     public int getQuantity() {
