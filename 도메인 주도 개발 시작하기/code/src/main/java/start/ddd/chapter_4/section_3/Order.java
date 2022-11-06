@@ -1,8 +1,12 @@
 package start.ddd.chapter_4.section_3;
 
+import lombok.Getter;
+
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
+@Getter
 @Entity
 @Access(AccessType.FIELD)
 @Table(name = "purchase_order")
@@ -27,6 +31,8 @@ public class Order {
    @CollectionTable(name = "order_line", joinColumns = @JoinColumn(name = "order_number"))
    @OrderColumn(name = "line_idx")
    private List<OrderLine> orderLines;
+
+   private LocalDateTime orderDate;
 
 
 //    public void setState(OrderState state) {

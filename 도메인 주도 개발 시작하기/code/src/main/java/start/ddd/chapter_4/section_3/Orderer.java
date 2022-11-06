@@ -1,7 +1,10 @@
 package start.ddd.chapter_4.section_3;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 
+@Getter
 @Embeddable
 public class Orderer {
 
