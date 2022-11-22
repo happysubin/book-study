@@ -18,15 +18,12 @@ public class LoginProcessController implements Controller{
         String password = requestMap.get("password");
         String userId = requestMap.get("userId");
         User user = DataBase.findUserById(userId);
+
         if(samePassword(password, user.getPassword())){
-            byte[] body = Files.readAllBytes(new File("./webapp/index.html").toPath());
-            HttpResponseUtils.responseLoginSuccessHeader(dos, body.length);
-//            HttpResponseUtils.responseBody(dos, body);
+            HttpResponseUtils.responseLoginSuccessHeader(dos);
         }
         else{
-            byte[] body = Files.readAllBytes(new File("./webapp/user/login_failed.html").toPath());
-            HttpResponseUtils.responseLoginFailHeader(dos, body.length);
-//            HttpResponseUtils.responseBody(dos, body);
+            HttpResponseUtils.responseLoginFailHeader(dos);
         }
     }
 

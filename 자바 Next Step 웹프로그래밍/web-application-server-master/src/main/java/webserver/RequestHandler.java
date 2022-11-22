@@ -16,6 +16,7 @@ public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
     public static final String METHOD = "method";
     public static final String PATH = "path";
+    public static final String COOKIE = "cookie";
 
     private Socket connection;
     static private Map<String, Controller> controllerMap = new HashMap<>();
@@ -32,6 +33,7 @@ public class RequestHandler extends Thread {
         controllerMap.put("/user/login.html", new LoginFormController());
         controllerMap.put("/user/login", new LoginProcessController());
         controllerMap.put("/user/login_failed.html", new LoginFailController());
+        controllerMap.put("/user/list.html", new UserListController());
     }
 
 
@@ -44,7 +46,8 @@ public class RequestHandler extends Thread {
             DataOutputStream dos = new DataOutputStream(out);
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
-            //로깅
+            //로깅]
+            Map<String, String> cookieMap = new HashMap<>();
             int lineNum = 0;
             int contentLength = 0;
             String firstLine = "";
@@ -52,11 +55,18 @@ public class RequestHandler extends Thread {
             while(!(line = br.readLine()).equals("") & line != null){
                 log.info(line);
                 if(lineNum == 0) firstLine = line;
+
+                if(line.contains("Cookie")){
+                    cookieMap = HttpRequestUtils.parseCookies(line);
+                }
+
                 if (line.contains("Content-Length")) {
                     contentLength = getContentLength(line);
                 }
                 lineNum++;
             }
+
+            String cookie = extractCookie(cookieMap);
 
             Map<String, String>  requestMap = new HashMap<>();
 
@@ -68,7 +78,7 @@ public class RequestHandler extends Thread {
                 bodyLine = IOUtils.readData(br, contentLength);
             }
 
-            createRequestMap(httpMethod, path, bodyLine, requestMap);
+            createRequestMap(httpMethod, path, bodyLine, cookie, requestMap);
             Controller controller = controllerMap.get(path);
             controller.doProcess(requestMap, dos);
 
@@ -78,14 +88,29 @@ public class RequestHandler extends Thread {
         }
     }
 
+    private String extractCookie(Map<String, String> cookieMap) {
+        if(cookieMap.keySet().size()> 1){
+            throw new RuntimeException("쿠키가 너무 많습니다");
+        }
+
+        String cookie = "";
+
+        for (String s : cookieMap.keySet()) {
+            cookie = cookieMap.get(s);
+        }
+
+        return cookie;
+    }
+
     private Integer getContentLength(String line) {
         return Integer.parseInt(line.split(" ")[1]);
     }
 
-    private void createRequestMap(String httpMethod, String path, String body, Map<String, String> requestMap) {
+    private void createRequestMap(String httpMethod, String path, String body, String cookie,  Map<String, String> requestMap) {
 
         requestMap.put(METHOD, httpMethod);
         requestMap.put(PATH, path);
+        requestMap.put(COOKIE, cookie);
 
         if(body != null){
             Map<String, String> bodyMap = HttpRequestUtils.parseQueryString(body);

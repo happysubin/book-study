@@ -11,7 +11,7 @@ public class HttpResponseUtils {
 
     private static final Logger log = LoggerFactory.getLogger(HttpResponseUtils.class);
 
-    public static void responseLoginSuccessHeader(DataOutputStream dos, int lengthOfBodyContent) {
+    public static void responseLoginSuccessHeader(DataOutputStream dos) {
         try {
             dos.writeBytes("HTTP/1.1 302 Redirect \r\n");
             dos.writeBytes("Location: /index.html \r\n");
@@ -23,13 +23,11 @@ public class HttpResponseUtils {
         }
     }
 
-    public static void responseLoginFailHeader(DataOutputStream dos, int lengthOfBodyContent) {
+    public static void responseLoginFailHeader(DataOutputStream dos) {
         try {
             dos.writeBytes("HTTP/1.1 302 Redirect \r\n");
-//            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Location: /user/login_failed.html Path=/\r\n");
-//            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("Set-Cookie: logined=false\r\n");
+            dos.writeBytes("Location: /user/login_failed.html\r\n");
+            dos.writeBytes("Set-Cookie: logined=false; Path=/\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             log.error(e.getMessage());
