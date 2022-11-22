@@ -12,15 +12,15 @@ public class HttpRequestUtils {
 
 
     public static String parseHttpMethod(String firstLine){
-        String[] s = firstLine.split(" ");
-        String method = s[0];
-        return method;
+        return firstLine.split(" ")[0];
     }
 
     public static String parseHtmlPath(String firstLine) {
-        String[] s = firstLine.split(" ");
-        String path = s[1];
-        return path;
+        return firstLine.split(" ")[1];
+    }
+
+    public static String separateParamsAndRequestUri(String firstLine){
+        return firstLine.split(" ")[1].split("\\?")[1];
     }
 
     /**
