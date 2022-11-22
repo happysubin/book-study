@@ -21,12 +21,12 @@ public class LoginProcessController implements Controller{
         if(samePassword(password, user.getPassword())){
             byte[] body = Files.readAllBytes(new File("./webapp/index.html").toPath());
             HttpResponseUtils.responseLoginSuccessHeader(dos, body.length);
-            HttpResponseUtils.responseBody(dos, body);
+//            HttpResponseUtils.responseBody(dos, body);
         }
         else{
             byte[] body = Files.readAllBytes(new File("./webapp/user/login_failed.html").toPath());
             HttpResponseUtils.responseLoginFailHeader(dos, body.length);
-            HttpResponseUtils.responseBody(dos, body);
+//            HttpResponseUtils.responseBody(dos, body);
         }
     }
 

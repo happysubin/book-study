@@ -31,7 +31,10 @@
 * 리팩토링하면서 위에 적은 br.readLine()에서 헤맴.
 
 ### 요구사항 5 - cookie
-* 
+* Set-Cookie를 사용함.
+* 200번대로 내려주는데 이러면 Redirect가 안됨.
+* 차라리 300번대로 내리고 Redirect하는게 맞는듯. 수정하자.
+* /user/** 경로에서 쿠키는 살아있음. /index.html로 가면 쿠키가 없어짐.
 
 ### 요구사항 6 - stylesheet 적용
 * 

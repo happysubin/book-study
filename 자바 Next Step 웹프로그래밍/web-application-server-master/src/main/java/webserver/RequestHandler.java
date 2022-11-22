@@ -31,6 +31,7 @@ public class RequestHandler extends Thread {
         controllerMap.put("/user/form.html", new UserFormController());
         controllerMap.put("/user/login.html", new LoginFormController());
         controllerMap.put("/user/login", new LoginProcessController());
+        controllerMap.put("/user/login_failed.html", new LoginFailController());
     }
 
 
