@@ -1,5 +1,6 @@
 package controller;
 
+import db.DataBase;
 import model.user.User;
 import model.user.UserFactory;
 import util.HttpResponseUtils;
@@ -15,7 +16,7 @@ public class SaveUserController implements Controller{
     @Override
     public void doProcess(Map<String, String> requestMap, DataOutputStream dos) throws IOException {
         User user = UserFactory.createUser(requestMap);
-        System.out.println("user.toString() = " + user.toString());
+        DataBase.addUser(user);
         HttpResponseUtils.response302Header(dos);
     }
 }

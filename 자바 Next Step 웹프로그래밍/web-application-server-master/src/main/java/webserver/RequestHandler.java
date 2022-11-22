@@ -6,14 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-import controller.Controller;
-import controller.HomeController;
-import controller.SaveUserController;
-import controller.UserFormController;
+import controller.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.HttpRequestUtils;
-import util.HttpResponseUtils;
 import util.IOUtils;
 
 public class RequestHandler extends Thread {
@@ -33,6 +29,8 @@ public class RequestHandler extends Thread {
         controllerMap.put("/index.html", new HomeController());
         controllerMap.put("/user/create", new SaveUserController());
         controllerMap.put("/user/form.html", new UserFormController());
+        controllerMap.put("/user/login.html", new LoginFormController());
+        controllerMap.put("/user/login", new LoginProcessController());
     }
 
 
@@ -66,14 +64,13 @@ public class RequestHandler extends Thread {
             String bodyLine = null;
 
             if(httpMethod.equals("POST")){
-                String s = IOUtils.readData(br, contentLength);
-                System.out.println("s = " + s);
+                bodyLine = IOUtils.readData(br, contentLength);
             }
 
-            createRequestMap(httpMethod, path, bodyLine, requestMap); //왜 여기가 문제지..?
-
+            createRequestMap(httpMethod, path, bodyLine, requestMap);
             Controller controller = controllerMap.get(path);
             controller.doProcess(requestMap, dos);
+
         } catch (IOException e) {
             e.printStackTrace();
             log.error(e.getMessage());
