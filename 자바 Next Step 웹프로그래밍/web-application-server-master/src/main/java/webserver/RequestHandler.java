@@ -43,11 +43,9 @@ public class RequestHandler extends Thread {
             String httpMethod = HttpRequestUtils.parseHttpMethod(firstLine);
             String htmlPath = HttpRequestUtils.parseHtmlPath(firstLine);
 
-            if(!firstLine.contains(".html")){
-                Map<String, String> userParamMap = HttpRequestUtils.parseQueryString(firstLine);
-                User user = UserFactory.createUser(HttpRequestUtils.separateParamsAndRequestUri(firstLine));
+            if(httpMethod.equals("POST")){
+                User user = UserFactory.createUser(br.readLine());
                 System.out.println("user.toString() = " + user.toString());
-
             }
 
 
