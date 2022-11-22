@@ -16,7 +16,7 @@ public class HttpResponseUtils {
             dos.writeBytes("HTTP/1.1 302 Redirect \r\n");
             dos.writeBytes("Location: /index.html \r\n");
 //            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("Set-Cookie: logined=true\r\n");
+            dos.writeBytes("Set-Cookie: logined=true; Path=/\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -27,7 +27,7 @@ public class HttpResponseUtils {
         try {
             dos.writeBytes("HTTP/1.1 302 Redirect \r\n");
 //            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Location: /user/login_failed.html \r\n");
+            dos.writeBytes("Location: /user/login_failed.html Path=/\r\n");
 //            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("Set-Cookie: logined=false\r\n");
             dos.writeBytes("\r\n");
