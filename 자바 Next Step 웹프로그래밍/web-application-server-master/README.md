@@ -20,10 +20,15 @@
 *  Get 방식으로 회원 객체 생성만 진행
 
 ### 요구사항 3 - post 방식으로 회원가입
-* 
+* br.readLine()은 줄바꿈 문자가 나오지 않으면 Lock에 걸려서 대기함.
+* br.read()와 Content-Length 헤더를 사용해서 해결.
+* Content-Length가 어디서부터 body가 시작하는 지 알려줌.
 
 ### 요구사항 4 - redirect 방식으로 이동
-* 
+
+* Location 헤더를 사용해서 리다이렉트함.
+* HTTP 공부를 다시 해야할 것 같다고 느낌.
+* 리팩토링하면서 위에 적은 br.readLine()에서 헤맴.
 
 ### 요구사항 5 - cookie
 * 

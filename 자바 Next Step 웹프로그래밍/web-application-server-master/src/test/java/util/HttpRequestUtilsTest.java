@@ -75,7 +75,7 @@ public class HttpRequestUtilsTest {
     @Test
     public void parseHtml(){
         String header = "GET /index.html HTTP/1.1";
-        String result = HttpRequestUtils.parseHtmlPath(header);
+        String result = HttpRequestUtils.parsePath(header);
         assertThat(result, is("/index.html"));
     }
 

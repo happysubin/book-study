@@ -11,8 +11,7 @@ public class UserFactory {
     private static String USERID = "userId";
     private static String EMAIL = "email";
 
-    public static User createUser(String line){
-        Map<String, String> map = HttpRequestUtils.parseQueryString(line);
+    public static User createUser(Map<String, String> map){
         return new User(
                 map.get(USERID),
                 map.get(PASSWORD),

@@ -15,7 +15,7 @@ public class HttpRequestUtils {
         return firstLine.split(" ")[0];
     }
 
-    public static String parseHtmlPath(String firstLine) {
+    public static String parsePath(String firstLine) {
         return firstLine.split(" ")[1];
     }
 
