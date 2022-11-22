@@ -80,7 +80,16 @@ public class RequestHandler extends Thread {
 
             createRequestMap(httpMethod, path, bodyLine, cookie, requestMap);
             Controller controller = controllerMap.get(path);
-            controller.doProcess(requestMap, dos);
+
+            if(controller == null){
+                //static 관련 css, js
+                ResourceController resourceController = new ResourceController();
+                resourceController.doProcess(requestMap, dos);
+            }
+
+            else{
+                controller.doProcess(requestMap, dos);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
