@@ -22,7 +22,7 @@
 ### 요구사항 3 - post 방식으로 회원가입
 * br.readLine()은 줄바꿈 문자가 나오지 않으면 Lock에 걸려서 대기함.
 * br.read()와 Content-Length 헤더를 사용해서 해결.
-* Content-Length가 어디서부터 body가 시작하는 지 알려줌.
+* Content-Length가 어디까지 body가 인지 알려줌. 즉 바디의 크기를 알려줌.
 
 ### 요구사항 4 - redirect 방식으로 이동
 
@@ -38,6 +38,7 @@
 
 ### 요구사항 6 - stylesheet 적용
 * Accept: text/css 와 */* 방식을 사용해서 빠르게 해결. 다형성을 지키지는 못함..
+* 필요한 css, js 파일마다 http 요청을 서버로 보낸다.
 
 ### heroku 서버에 배포 후
 * 
