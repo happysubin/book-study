@@ -1,14 +1,12 @@
-package controller;
+package part_3.controller;
 
-import db.DataBase;
-import model.user.User;
-import model.user.UserFactory;
-import util.HttpResponseUtils;
+import part_3.db.DataBase;
+import part_3.model.user.User;
+import part_3.model.user.UserFactory;
+import part_3.util.HttpResponseUtils;
 
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Map;
 
 public class SaveUserController implements Controller{

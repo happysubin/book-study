@@ -1,4 +1,4 @@
-package webserver;
+package part_3.webserver;
 
 import java.io.*;
 import java.net.Socket;
@@ -9,8 +9,9 @@ import java.util.Map;
 import controller.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.HttpRequestUtils;
-import util.IOUtils;
+import part_3.controller.*;
+import part_3.util.HttpRequestUtils;
+import part_3.util.IOUtils;
 
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);

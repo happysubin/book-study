@@ -1,4 +1,4 @@
-package util;
+package part_3.util;
 
 import java.io.*;
 import java.util.Arrays;

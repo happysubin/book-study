@@ -7,7 +7,8 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import util.HttpRequestUtils.Pair;
+import part_3.util.HttpRequestUtils;
+import part_3.util.HttpRequestUtils.Pair;
 
 public class HttpRequestUtilsTest {
     @Test

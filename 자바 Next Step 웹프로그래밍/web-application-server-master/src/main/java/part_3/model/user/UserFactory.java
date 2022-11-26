@@ -1,6 +1,4 @@
-package model.user;
-
-import util.HttpRequestUtils;
+package part_3.model.user;
 
 import java.util.Map;
 

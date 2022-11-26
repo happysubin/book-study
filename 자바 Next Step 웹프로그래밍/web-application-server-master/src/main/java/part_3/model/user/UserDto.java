@@ -1,4 +1,4 @@
-package model.user;
+package part_3.model.user;
 
 
 public class UserDto {

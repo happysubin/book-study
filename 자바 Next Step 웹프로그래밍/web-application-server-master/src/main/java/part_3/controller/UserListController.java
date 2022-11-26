@@ -1,13 +1,12 @@
-package controller;
+package part_3.controller;
 
-import db.DataBase;
-import model.user.User;
-import util.HttpResponseUtils;
-import webserver.RequestHandler;
+import part_3.db.DataBase;
+import part_3.model.user.User;
+import part_3.util.HttpResponseUtils;
+import part_3.webserver.RequestHandler;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Map;
 

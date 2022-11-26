@@ -6,6 +6,7 @@ import java.io.StringReader;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import part_3.util.IOUtils;
 
 public class IOUtilsTest {
     private static final Logger logger = LoggerFactory.getLogger(IOUtilsTest.class);
