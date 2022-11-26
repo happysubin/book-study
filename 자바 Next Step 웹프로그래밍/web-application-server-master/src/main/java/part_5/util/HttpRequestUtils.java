@@ -1,12 +1,11 @@
-package part_3.util;
-
-import java.io.*;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
+package part_5.util;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class HttpRequestUtils {
 
@@ -51,7 +50,7 @@ public class HttpRequestUtils {
                 .collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
     }
 
-    public static Pair getKeyValue(String keyValue, String regex) {
+    static Pair getKeyValue(String keyValue, String regex) {
         if (Strings.isNullOrEmpty(keyValue)) {
             return null;
         }
@@ -72,7 +71,7 @@ public class HttpRequestUtils {
         String key;
         String value;
 
-        public Pair(String key, String value) {
+        Pair(String key, String value) {
             this.key = key.trim();
             this.value = value.trim();
         }
