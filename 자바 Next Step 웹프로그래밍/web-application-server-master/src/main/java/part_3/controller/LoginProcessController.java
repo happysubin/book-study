@@ -2,8 +2,8 @@ package part_3.controller;
 
 import part_3.db.DataBase;
 import part_3.model.user.User;
-import part_3.util.HttpResponseUtils;
 import part_3.webserver.HttpRequest;
+import part_3.webserver.HttpResponse;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,11 +15,20 @@ public class LoginProcessController implements Controller{
         String userId = httpRequest.getParameter("userId");
         User user = DataBase.findUserById(userId);
 
-        if(samePassword(password, user.getPassword())){
-            HttpResponseUtils.responseLoginSuccessHeader(dos);
+        HttpResponse response = new HttpResponse(dos);
+
+        if(user == null){
+            response.addHeader("Set-Cookie", "logined=false");
+            response.sendRedirect("/user/login_failed.html");
+        }
+
+        else if(samePassword(password, user.getPassword())){
+            response.addHeader("Set-Cookie", "logined=true");
+            response.sendRedirect("/index.html");
         }
         else{
-            HttpResponseUtils.responseLoginFailHeader(dos);
+            response.addHeader("Set-Cookie", "logined=false");
+            response.sendRedirect("/user/login_failed.html");
         }
     }
 

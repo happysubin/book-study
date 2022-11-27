@@ -3,33 +3,34 @@ package util.part_5;
 import org.junit.Assert;
 import org.junit.Test;
 import part_3.webserver.HttpRequest;
+import part_3.webserver.HttpResponse;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 
 public class HttpResponseTest {
     private String testDirectory  = "./src/test/resources/";
 
     @Test
-    public void request_Get() throws Exception {
-        InputStream in = new FileInputStream(new File(testDirectory + "Http_GET.txt"));
-        HttpRequest request = new HttpRequest(in);
-
-        Assert.assertEquals("GET", request.getMethod());
-        Assert.assertEquals("/user/create", request.getPath());
-        Assert.assertEquals("keep-alive", request.getHeader("Connection"));
-        Assert.assertEquals("bin", request.getParameter("userId"));
+    public void responseForward() throws Exception {
+        HttpResponse response = new HttpResponse(createOutputStream("Http_Forward.txt"));
+        response.forward("/index.html");
     }
 
     @Test
-    public void request_Post() throws Exception{
-        InputStream in = new FileInputStream(new File(testDirectory + "Http_POST.txt"));
-        HttpRequest request = new HttpRequest(in);
+    public void responseRedirect() throws Exception{
+        HttpResponse response = new HttpResponse(createOutputStream("Http_Redirect.txt"));
+        response.forward("/index.html");
+    }
 
-        Assert.assertEquals("POST", request.getMethod());
-        Assert.assertEquals("/user/create", request.getPath());
-        Assert.assertEquals("keep-alive", request.getHeader("Connection"));
-        Assert.assertEquals("javajigi", request.getParameter("userId"));
+    @Test
+    public void responseCookies() throws Exception{
+        HttpResponse response = new HttpResponse(createOutputStream("Http_Cookie.txt"));
+        response.addHeader("Set-Cookie", "logined=true");
+        response.forward("/index.html");
+    }
+
+
+    private OutputStream createOutputStream(String filename) throws FileNotFoundException {
+        return new FileOutputStream(new File(testDirectory + filename));
     }
 }

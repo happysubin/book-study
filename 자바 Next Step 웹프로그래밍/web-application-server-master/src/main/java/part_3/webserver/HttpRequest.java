@@ -13,6 +13,11 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+
+/**
+ * 요청 전문가 클래스
+ */
+
 public class HttpRequest {
 
     private static final Logger log = LoggerFactory.getLogger(part_5.util.HttpRequestUtils.class);

@@ -2,8 +2,8 @@ package part_3.controller;
 
 import part_3.db.DataBase;
 import part_3.model.user.User;
-import part_3.util.HttpResponseUtils;
 import part_3.webserver.HttpRequest;
+import part_3.webserver.HttpResponse;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -13,10 +13,9 @@ public class UserListController implements Controller{
     @Override
     public void doProcess(HttpRequest httpRequest, DataOutputStream dos) throws IOException {
         String cookie = httpRequest.getHeader("Cookie").split("=")[1];
-        System.out.println("cookie = " + cookie);
+        HttpResponse response = new HttpResponse(dos);
 
-        if(Boolean.parseBoolean(cookie) == true){
-
+        if(Boolean.parseBoolean(cookie) == true) {
 
             Collection<User> users = DataBase.findAll();
 
@@ -30,15 +29,11 @@ public class UserListController implements Controller{
                 sb.append("</tr>");
             }
             sb.append("</table>");
-            byte[] body = sb.toString().getBytes();
-
-            HttpResponseUtils.response200Header(dos, body.length);
-            HttpResponseUtils.responseBody(dos, body);
-
+            response.forwardBody(sb.toString());
         }
 
         else{
-            HttpResponseUtils.responseLoginFailHeader(dos);
+            response.forward("/user/login_failed.html");
         }
     }
 }

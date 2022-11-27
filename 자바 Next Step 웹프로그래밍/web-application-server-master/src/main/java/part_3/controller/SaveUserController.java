@@ -3,8 +3,8 @@ package part_3.controller;
 import part_3.db.DataBase;
 import part_3.model.user.User;
 import part_3.model.user.UserFactory;
-import part_3.util.HttpResponseUtils;
 import part_3.webserver.HttpRequest;
+import part_3.webserver.HttpResponse;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -25,6 +25,7 @@ public class SaveUserController implements Controller{
                 httpRequest.getParameter(EMAIL)
         );
         DataBase.addUser(user);
-        HttpResponseUtils.response302Header(dos);
+        HttpResponse response = new HttpResponse(dos);
+        response.sendRedirect("/index.html");
     }
 }
