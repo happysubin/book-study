@@ -17,7 +17,7 @@ public class SaveUserController implements Controller{
     private static String EMAIL = "email";
 
     @Override
-    public void doProcess(HttpRequest httpRequest, DataOutputStream dos) throws IOException {
+    public void service(HttpRequest httpRequest, HttpResponse response) throws IOException {
         User user = UserFactory.createUser(
                 httpRequest.getParameter(USERID),
                 httpRequest.getParameter(PASSWORD),
@@ -25,7 +25,6 @@ public class SaveUserController implements Controller{
                 httpRequest.getParameter(EMAIL)
         );
         DataBase.addUser(user);
-        HttpResponse response = new HttpResponse(dos);
         response.sendRedirect("/index.html");
     }
 }

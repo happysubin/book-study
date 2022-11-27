@@ -5,17 +5,14 @@ import part_3.model.user.User;
 import part_3.webserver.HttpRequest;
 import part_3.webserver.HttpResponse;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class LoginProcessController implements Controller{
     @Override
-    public void doProcess(HttpRequest httpRequest, DataOutputStream dos) throws IOException {
+    public void service(HttpRequest httpRequest, HttpResponse response) throws IOException {
         String password = httpRequest.getParameter("password");
         String userId = httpRequest.getParameter("userId");
         User user = DataBase.findUserById(userId);
-
-        HttpResponse response = new HttpResponse(dos);
 
         if(user == null){
             response.addHeader("Set-Cookie", "logined=false");

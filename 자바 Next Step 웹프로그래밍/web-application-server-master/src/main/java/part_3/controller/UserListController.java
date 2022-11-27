@@ -5,15 +5,13 @@ import part_3.model.user.User;
 import part_3.webserver.HttpRequest;
 import part_3.webserver.HttpResponse;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 
 public class UserListController implements Controller{
     @Override
-    public void doProcess(HttpRequest httpRequest, DataOutputStream dos) throws IOException {
-        String cookie = httpRequest.getHeader("Cookie").split("=")[1];
-        HttpResponse response = new HttpResponse(dos);
+    public void service(HttpRequest request, HttpResponse response) throws IOException {
+        String cookie = request.getHeader("Cookie").split("=")[1];
 
         if(Boolean.parseBoolean(cookie) == true) {
 

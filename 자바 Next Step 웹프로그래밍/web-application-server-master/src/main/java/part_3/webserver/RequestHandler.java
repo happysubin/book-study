@@ -46,18 +46,18 @@ public class RequestHandler extends Thread {
             DataOutputStream dos = new DataOutputStream(out);
 
             HttpRequest httpRequest = new HttpRequest(in);
-
+            HttpResponse httpResponse = new HttpResponse(dos);
 
             Controller controller = controllerMap.get(httpRequest.getPath());
 
             if(controller == null){
                 //static 관련 css, js
                 ResourceController resourceController = new ResourceController();
-                resourceController.doProcess(httpRequest, dos);
+                resourceController.service(httpRequest, httpResponse);
             }
 
             else{
-                controller.doProcess(httpRequest, dos);
+                controller.service(httpRequest, httpResponse);
             }
 
         } catch (IOException e) {

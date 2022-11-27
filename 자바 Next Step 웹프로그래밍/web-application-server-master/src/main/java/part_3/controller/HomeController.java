@@ -9,9 +9,8 @@ import java.io.IOException;
 
 public class HomeController implements Controller{
     @Override
-    public void doProcess(HttpRequest httpRequest, DataOutputStream dos) throws IOException {
-        HttpResponse response = new HttpResponse(dos);
-        response.forward(httpRequest.getPath());
+    public void service(HttpRequest request, HttpResponse response) throws IOException {
+        response.forward(request.getPath());
     }
 
 }
