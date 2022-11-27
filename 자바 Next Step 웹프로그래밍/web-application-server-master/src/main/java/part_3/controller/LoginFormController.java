@@ -6,9 +6,10 @@ import part_3.webserver.HttpResponse;
 
 import java.io.IOException;
 
-public class LoginFormController implements Controller{
+public class LoginFormController extends AbstractController{
     @Override
-    public void service(HttpRequest httpRequest, HttpResponse response) throws IOException {
-        response.forward(httpRequest.getPath());
+    protected void doGet(HttpRequest request, HttpResponse response) throws IOException {
+        response.forward(request.getPath());
+
     }
 }

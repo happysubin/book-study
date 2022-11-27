@@ -45,7 +45,6 @@ public class HttpResponse {
     }
 
     public void sendRedirect(String redirectPath) throws IOException {
-        System.out.println("headers.get(\"Set-Cookie\") = " + headers.get("Set-Cookie"));
         dos.writeBytes("HTTP/1.1 302 Redirect \r\n");
         dos.writeBytes("Location: " + redirectPath + " \r\n");
 

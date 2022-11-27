@@ -7,11 +7,12 @@ import part_3.webserver.HttpResponse;
 
 import java.io.IOException;
 
-public class LoginProcessController implements Controller{
+public class LoginProcessController extends AbstractController{
+
     @Override
-    public void service(HttpRequest httpRequest, HttpResponse response) throws IOException {
-        String password = httpRequest.getParameter("password");
-        String userId = httpRequest.getParameter("userId");
+    protected void doPost(HttpRequest request, HttpResponse response) throws IOException {
+        String password = request.getParameter("password");
+        String userId = request.getParameter("userId");
         User user = DataBase.findUserById(userId);
 
         if(user == null){

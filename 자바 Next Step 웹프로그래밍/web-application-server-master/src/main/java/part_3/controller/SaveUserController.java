@@ -6,10 +6,9 @@ import part_3.model.user.UserFactory;
 import part_3.webserver.HttpRequest;
 import part_3.webserver.HttpResponse;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class SaveUserController implements Controller{
+public class SaveUserController extends AbstractController{
 
     private static String PASSWORD = "password";
     private static String NAME = "name";
@@ -17,12 +16,12 @@ public class SaveUserController implements Controller{
     private static String EMAIL = "email";
 
     @Override
-    public void service(HttpRequest httpRequest, HttpResponse response) throws IOException {
+    protected void doPost(HttpRequest request, HttpResponse response) throws IOException {
         User user = UserFactory.createUser(
-                httpRequest.getParameter(USERID),
-                httpRequest.getParameter(PASSWORD),
-                httpRequest.getParameter(NAME),
-                httpRequest.getParameter(EMAIL)
+                request.getParameter(USERID),
+                request.getParameter(PASSWORD),
+                request.getParameter(NAME),
+                request.getParameter(EMAIL)
         );
         DataBase.addUser(user);
         response.sendRedirect("/index.html");

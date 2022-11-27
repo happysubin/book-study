@@ -3,13 +3,12 @@ package part_3.controller;
 import part_3.webserver.HttpRequest;
 import part_3.webserver.HttpResponse;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 
+public class HomeController extends AbstractController {
 
-public class HomeController implements Controller{
     @Override
-    public void service(HttpRequest request, HttpResponse response) throws IOException {
+    protected void doGet(HttpRequest request, HttpResponse response) throws IOException {
         response.forward(request.getPath());
     }
 
