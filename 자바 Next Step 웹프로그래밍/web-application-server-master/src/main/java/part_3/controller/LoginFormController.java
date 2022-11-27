@@ -1,15 +1,12 @@
 package part_3.controller;
 
 import part_3.util.HttpResponseUtils;
-import part_5.webserver.HttpRequest;
+import part_3.webserver.HttpRequest;
 
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Map;
-
-import static part_3.webserver.RequestHandler.PATH;
 
 public class LoginFormController implements Controller{
     @Override

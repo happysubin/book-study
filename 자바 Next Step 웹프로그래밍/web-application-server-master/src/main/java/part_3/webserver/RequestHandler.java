@@ -11,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import part_3.controller.*;
 import part_3.util.HttpRequestUtils;
-import part_3.util.IOUtils;
-import part_5.webserver.HttpRequest;
 
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);

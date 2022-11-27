@@ -2,7 +2,7 @@ package util.part_5;
 
 import org.junit.Assert;
 import org.junit.Test;
-import part_5.webserver.HttpRequest;
+import part_3.webserver.HttpRequest;
 
 import java.io.File;
 import java.io.FileInputStream;
