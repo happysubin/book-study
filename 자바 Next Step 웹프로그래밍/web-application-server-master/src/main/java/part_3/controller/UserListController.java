@@ -4,6 +4,7 @@ import part_3.db.DataBase;
 import part_3.model.user.User;
 import part_3.util.HttpResponseUtils;
 import part_3.webserver.RequestHandler;
+import part_5.webserver.HttpRequest;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -12,8 +13,9 @@ import java.util.Map;
 
 public class UserListController implements Controller{
     @Override
-    public void doProcess(Map<String, String> requestMap, DataOutputStream dos) throws IOException {
-        String cookie = requestMap.get(RequestHandler.COOKIE);
+    public void doProcess(HttpRequest httpRequest, DataOutputStream dos) throws IOException {
+        String cookie = httpRequest.getHeader("Cookie").split("=")[1];
+        System.out.println("cookie = " + cookie);
 
         if(Boolean.parseBoolean(cookie) == true){
 

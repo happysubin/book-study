@@ -4,16 +4,28 @@ import part_3.db.DataBase;
 import part_3.model.user.User;
 import part_3.model.user.UserFactory;
 import part_3.util.HttpResponseUtils;
+import part_5.webserver.HttpRequest;
 
+import javax.print.attribute.standard.MediaSize;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
 public class SaveUserController implements Controller{
 
+    private static String PASSWORD = "password";
+    private static String NAME = "name";
+    private static String USERID = "userId";
+    private static String EMAIL = "email";
+
     @Override
-    public void doProcess(Map<String, String> requestMap, DataOutputStream dos) throws IOException {
-        User user = UserFactory.createUser(requestMap);
+    public void doProcess(HttpRequest httpRequest, DataOutputStream dos) throws IOException {
+        User user = UserFactory.createUser(
+                httpRequest.getParameter(USERID),
+                httpRequest.getParameter(PASSWORD),
+                httpRequest.getParameter(NAME),
+                httpRequest.getParameter(EMAIL)
+        );
         DataBase.addUser(user);
         HttpResponseUtils.response302Header(dos);
     }

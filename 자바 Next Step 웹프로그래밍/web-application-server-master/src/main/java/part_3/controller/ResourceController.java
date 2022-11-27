@@ -2,6 +2,7 @@ package part_3.controller;
 
 import part_3.util.HttpResponseUtils;
 import part_3.webserver.RequestHandler;
+import part_5.webserver.HttpRequest;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -11,8 +12,8 @@ import java.util.Map;
 
 public class ResourceController implements Controller {
     @Override
-    public void doProcess(Map<String, String> requestMap, DataOutputStream dos) throws IOException {
-        String path = requestMap.get(RequestHandler.PATH);
+    public void doProcess(HttpRequest httpRequest, DataOutputStream dos) throws IOException {
+        String path = httpRequest.getPath();
         if(path.contains(".css")){
             byte[] body = Files.readAllBytes(new File("./webapp" + path).toPath());
             HttpResponseUtils.responseCss200Header(dos, body.length);

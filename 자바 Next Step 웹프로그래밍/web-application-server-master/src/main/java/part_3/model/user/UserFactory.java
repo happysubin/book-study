@@ -9,11 +9,11 @@ public class UserFactory {
     private static String USERID = "userId";
     private static String EMAIL = "email";
 
-    public static User createUser(Map<String, String> map){
+    public static User createUser(String userId, String password, String name, String email){
         return new User(
-                map.get(USERID),
-                map.get(PASSWORD),
-                map.get(NAME),
-                map.get(EMAIL)
+                userId,
+                password,
+                name,
+                email
         );}
 }

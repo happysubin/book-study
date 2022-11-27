@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-public class HttpRequestTest {
+public class HttpResponseTest {
     private String testDirectory  = "./src/test/resources/";
 
     @Test

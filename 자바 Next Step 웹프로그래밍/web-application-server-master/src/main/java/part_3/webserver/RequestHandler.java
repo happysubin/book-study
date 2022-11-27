@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import part_3.controller.*;
 import part_3.util.HttpRequestUtils;
 import part_3.util.IOUtils;
+import part_5.webserver.HttpRequest;
 
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -45,51 +46,20 @@ public class RequestHandler extends Thread {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             DataOutputStream dos = new DataOutputStream(out);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
-            //로깅]
-            Map<String, String> cookieMap = new HashMap<>();
-            int lineNum = 0;
-            int contentLength = 0;
-            String firstLine = "";
-            String line;
-            while(!(line = br.readLine()).equals("") & line != null){
-                log.info(line);
-                if(lineNum == 0) firstLine = line;
+            HttpRequest httpRequest = new HttpRequest(in);
 
-                if(line.contains("Cookie")){
-                    cookieMap = HttpRequestUtils.parseCookies(line);
-                }
 
-                if (line.contains("Content-Length")) {
-                    contentLength = getContentLength(line);
-                }
-                lineNum++;
-            }
-
-            String cookie = extractCookie(cookieMap);
-
-            Map<String, String>  requestMap = new HashMap<>();
-
-            String httpMethod = HttpRequestUtils.parseHttpMethod(firstLine);
-            String path = HttpRequestUtils.parsePath(firstLine);
-            String bodyLine = null;
-
-            if(httpMethod.equals("POST")){
-                bodyLine = IOUtils.readData(br, contentLength);
-            }
-
-            createRequestMap(httpMethod, path, bodyLine, cookie, requestMap);
-            Controller controller = controllerMap.get(path);
+            Controller controller = controllerMap.get(httpRequest.getPath());
 
             if(controller == null){
                 //static 관련 css, js
                 ResourceController resourceController = new ResourceController();
-                resourceController.doProcess(requestMap, dos);
+                resourceController.doProcess(httpRequest, dos);
             }
 
             else{
-                controller.doProcess(requestMap, dos);
+                controller.doProcess(httpRequest, dos);
             }
 
         } catch (IOException e) {
