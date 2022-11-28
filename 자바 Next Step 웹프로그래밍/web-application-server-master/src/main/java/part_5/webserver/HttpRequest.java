@@ -15,8 +15,7 @@ public class HttpRequest {
 
     private static final Logger log = LoggerFactory.getLogger(HttpRequest.class);
 
-    private String method;
-    private String path;
+    private RequestLine requestLine;
     private Map<String, String > headers = new HashMap<>();
     private Map<String, String > params = new HashMap<>();
 
@@ -24,12 +23,13 @@ public class HttpRequest {
         try{
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
             String line = br.readLine();
+
             if(line == null){
                 return;
             }
 
-            processRequestLine(line);
-
+            requestLine =  new RequestLine(line);
+            params = requestLine.getParams();
             line = br.readLine();
 
             while (!line.equals("")){
@@ -39,41 +39,24 @@ public class HttpRequest {
                 line = br.readLine();
             }
 
-            if("POST".equals(method)){
+            if(getMethod().isPost()){
                 String body = IOUtils.readData(br, Integer.parseInt(headers.get("Content-Length")));
                 params = HttpRequestUtils.parseQueryString(body);
             }
+
 
         }catch (Exception e){
             log.error(e.getMessage());
         }
     }
 
-    private void processRequestLine(String requestLine) {
-        log.debug("request line : {}", requestLine);
-        String[] tokens = requestLine.split(" ");
-        method = tokens[0];
 
-        if("POST".equals(method)){
-            path = tokens[1];
-            return;
-        }
-
-        int index = tokens[1].indexOf("?");
-        if(index == -1){
-            path = tokens[1];
-        }else{
-            path = tokens[1].substring(0, index);
-            params = HttpRequestUtils.parseQueryString(tokens[1].substring(index + 1));
-        }
-    }
-
-    public String getMethod() {
-        return method;
+    public HttpMethod getMethod() {
+        return requestLine.getMethod();
     }
 
     public String getPath() {
-        return path;
+        return requestLine.getPath();
     }
 
     public String getHeaders(String name) {
