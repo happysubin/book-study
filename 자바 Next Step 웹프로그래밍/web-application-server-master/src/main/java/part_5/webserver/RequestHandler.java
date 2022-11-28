@@ -37,6 +37,7 @@ public class RequestHandler extends Thread {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest request = new HttpRequest(in);
+            HttpResponse response = new HttpResponse(out);
             String url = getDefaultUrl(request.getPath());
 
             if ("/user/create".equals(url)) {
@@ -49,24 +50,23 @@ public class RequestHandler extends Thread {
                 );
                 log.debug("user : {}", user);
                 DataBase.addUser(user);
-                DataOutputStream dos = new DataOutputStream(out);
-                response302Header(dos);
+                response.sendRedirect("/index.html");
             } else if ("/user/login".equals(url)) {
 
                 User user = DataBase.findUserById(request.getParams("userId"));
                 if (user != null) {
                     if (user.login(request.getParams("password"))) {
-                        DataOutputStream dos = new DataOutputStream(out);
-                        response302LoginSuccessHeader(dos);
+                        response.addHeader("Set-Cookie", "logined=true");
+                        response.sendRedirect("/index.html");
                     } else {
-                        responseResource(out, "/user/login_failed.html");
+                        response.sendRedirect( "/user/login_failed.html");
                     }
                 } else {
-                    responseResource(out, "/user/login_failed.html");
+                    response.sendRedirect("/user/login_failed.html");
                 }
             } else if ("/user/list".equals(url)) {
                 if (!isLogin(request.getHeaders("Cookie"))) {
-                    responseResource(out, "/user/login.html");
+                    response.sendRedirect("/user/login.html");
                     return;
                 }
 
@@ -81,14 +81,9 @@ public class RequestHandler extends Thread {
                     sb.append("</tr>");
                 }
                 sb.append("</table>");
-                byte[] body = sb.toString().getBytes();
-                DataOutputStream dos = new DataOutputStream(out);
-                response200Header(dos, body.length);
-                responseBody(dos, body);
-            } else if (url.endsWith(".css")) {
-                responseCssResource(out, url);
+                response.forwardBody(sb.toString());
             } else {
-                responseResource(out, url);
+                response.forward(url);
             }
         } catch (IOException e) {
             log.error(e.getMessage());
