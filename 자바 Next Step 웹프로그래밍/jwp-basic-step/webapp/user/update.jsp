@@ -39,3 +39,4 @@
 
 <%@ include file="/include/footer.jspf" %>
 </body>
+</html>

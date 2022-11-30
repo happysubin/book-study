@@ -34,10 +34,16 @@ public class UpdateUserServlet extends HttpServlet {
                         req.getParameter("email")
                 );
                 log.debug("user : {}", user);
-                resp.sendRedirect("/user/list");
+                resp.sendRedirect("/users/list");
+            }
+
+            else{
+                resp.sendRedirect("/");
             }
         }
 
-        resp.sendRedirect("/");
+        else{
+            resp.sendRedirect("/");
+        }
     }
 }
