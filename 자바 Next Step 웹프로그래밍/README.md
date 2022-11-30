@@ -76,3 +76,4 @@
 
 * 프로젝트 준비. 재성님이 올려주신 코드를 인스톨함.
 * 에러가 발생. 라이브러리를 설치함. tomcat-catalina을 pom.xml에 추가. WEB-INF에 jakarta-taglibs-standart-1.1.2 라이브러리를 추가해 문제를 해결함. 
+* 6.1.2 무난하게 실행. JSP를 잘 몰라서 문법 찾아다님.
