@@ -10,10 +10,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebServlet("/user/update")
+@WebServlet("/users/update")
 public class UpdateUserServlet extends HttpServlet {
 
     private static final Logger log = LoggerFactory.getLogger(UpdateUserServlet.class);
@@ -21,14 +22,22 @@ public class UpdateUserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String userId = req.getParameter("userId");
-        System.out.println("userId = " + userId);
+        HttpSession session = req.getSession();
+        Object value = session.getAttribute("user");
         User user = DataBase.findUserById(userId);
-        user.update(
-                req.getParameter("password"),
-                req.getParameter("name"),
-                req.getParameter("email")
-        );
-        log.debug("user : {}", user);
-        resp.sendRedirect("/user/list");
+
+        if(value != null){
+            if(user == (User) value){
+                user.update(
+                        req.getParameter("password"),
+                        req.getParameter("name"),
+                        req.getParameter("email")
+                );
+                log.debug("user : {}", user);
+                resp.sendRedirect("/user/list");
+            }
+        }
+
+        resp.sendRedirect("/");
     }
 }
