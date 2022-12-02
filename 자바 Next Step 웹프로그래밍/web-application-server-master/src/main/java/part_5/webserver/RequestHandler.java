@@ -11,7 +11,7 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Map;
-
+import java.util.UUID;
 
 
 import org.slf4j.Logger;
@@ -39,6 +39,10 @@ public class RequestHandler extends Thread {
             HttpRequest request = new HttpRequest(in);
             HttpResponse response = new HttpResponse(out);
 
+//            if(request.getCookies().getCookie("JESSIONID") == null){
+//                response.addHeader("Set-Cookie", "JESSIONID=" + UUID.randomUUID());
+//            }
+
             Controller controller = RequestMapping.getController(request.getPath());
 
             if(controller == null){
@@ -59,5 +63,10 @@ public class RequestHandler extends Thread {
             return "/index.html";
         }
         return path;
+    }
+
+    private String getSessionId(String cookieValue){
+        Map<String, String > cookies = HttpRequestUtils.parseCookies(cookieValue);
+        return cookies.get("JSESSIONID");
     }
 }

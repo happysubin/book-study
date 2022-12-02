@@ -4,6 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import part_5.util.HttpRequestUtils;
 import part_5.util.IOUtils;
+import part_6.HttpCookie;
+import part_6.HttpSession;
+import part_6.HttpSessions;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -65,5 +68,13 @@ public class HttpRequest {
 
     public String getParams(String name) {
         return params.get(name);
+    }
+
+    public HttpCookie getCookies(){
+        return new HttpCookie(getHeaders("Cookie"));
+    }
+
+    public HttpSession getSession(){
+        return HttpSessions.getSession(getCookies().getCookie("JSESSIONID"));
     }
 }

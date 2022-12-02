@@ -77,3 +77,9 @@
 * 프로젝트 준비. 재성님이 올려주신 코드를 인스톨함.
 * 에러가 발생. 라이브러리를 설치함. tomcat-catalina을 pom.xml에 추가. WEB-INF에 jakarta-taglibs-standart-1.1.2 라이브러리를 추가해 문제를 해결함. 
 * 6.1.2 무난하게 실행. JSP를 잘 몰라서 문법 찾아다님.
+* 설정 오류라고 생각했는데, 그냥 내 오타였다. 침착하게 디버깅하자.
+
+### chapter 6.3
+
+* 이 부분은 다시 한 번 꼭 해보자.
+* JSESSIONID를 사용해서 HttpSessions에서 나의 HttpSession 객체를 가져오고, "user" 키를 활용해서 내가 가져와야할 user 객체를 가져온다.
