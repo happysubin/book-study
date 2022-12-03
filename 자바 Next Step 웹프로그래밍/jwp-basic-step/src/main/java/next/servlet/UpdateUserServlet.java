@@ -1,4 +1,4 @@
-package next.web;
+package next.servlet;
 
 import core.db.DataBase;
 import next.model.User;

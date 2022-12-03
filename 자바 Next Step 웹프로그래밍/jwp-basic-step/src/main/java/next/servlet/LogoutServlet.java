@@ -1,4 +1,4 @@
-package next.web;
+package next.servlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

@@ -1,4 +1,4 @@
-package next.web;
+package next.servlet;
 
 import java.io.IOException;
 
