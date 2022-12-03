@@ -1,4 +1,4 @@
-package next.servlet;
+package next.part_6.servlet;
 
 import java.io.IOException;
 
