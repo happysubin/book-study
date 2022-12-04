@@ -17,7 +17,7 @@ public class ContextLoaderListener implements ServletContextListener {
     private static final Logger logger = LoggerFactory.getLogger(ContextLoaderListener.class);
 
     @Override
-    public void contextInitialized(ServletContextEvent sce) {
+    public void contextInitialized(ServletContextEvent sce) { //톰캣 서버가 초기화 작업을 진행함.
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(new ClassPathResource("jwp.sql"));
         DatabasePopulatorUtils.execute(populator, ConnectionManager.getDataSource());
