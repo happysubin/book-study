@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 
-@WebServlet("/users/login")
+//@WebServlet("/users/login")
 public class LoginServlet extends HttpServlet {
 
 
