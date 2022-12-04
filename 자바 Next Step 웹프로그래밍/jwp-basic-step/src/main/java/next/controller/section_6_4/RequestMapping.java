@@ -1,4 +1,4 @@
-package next.controller;
+package next.controller.section_6_4;
 
 import java.util.HashMap;
 import java.util.Map;

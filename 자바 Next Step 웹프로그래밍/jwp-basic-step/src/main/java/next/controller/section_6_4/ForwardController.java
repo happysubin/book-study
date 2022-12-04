@@ -1,4 +1,4 @@
-package next.controller;
+package next.controller.section_6_4;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
