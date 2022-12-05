@@ -31,6 +31,6 @@ public class Application {
 
         //메서드 참조 사용
         //Comparator<Apple> c = comparing((Apple a1) -> a1.getWeight());
-        inventory.sort(comparing(apple -> apple.getWeight()));
+        inventory.sort(comparing(Apple::getWeight));
     }
 }
