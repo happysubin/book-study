@@ -9,13 +9,15 @@ import java.util.List;
 
 public class JdbcTemplate {
 
-    public void update(String sql, PreparedStatementSetter setter){
+    public void update(String sql, Object... objects){
 
         try(
                 Connection con = ConnectionManager.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(sql);
         ){
-            setter.setValues(pstmt);
+            for (int i = 0; i < objects.length; i++) {
+                pstmt.setObject(i + 1, objects[i]);
+            }
             pstmt.executeUpdate();
         }
         catch(SQLException e){

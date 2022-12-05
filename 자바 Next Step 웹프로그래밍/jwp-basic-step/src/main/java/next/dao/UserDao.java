@@ -15,12 +15,7 @@ public class UserDao {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "INSERT INTO USERS VALUES (?, ?, ?, ?)";
 
-        jdbcTemplate.update(sql, (PreparedStatement pstmt) ->{
-            pstmt.setString(1, user.getUserId());
-            pstmt.setString(2, user.getPassword());
-            pstmt.setString(3, user.getName());
-            pstmt.setString(4, user.getEmail());
-        });
+        jdbcTemplate.update(sql, user.getUserId(), user.getPassword(), user.getName(), user.getEmail());
     }
 
     public void update(User user) throws SQLException {
@@ -28,12 +23,7 @@ public class UserDao {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "UPDATE USERS SET password = ?, name = ?, email = ? WHERE userId = ?;";
 
-        jdbcTemplate.update(sql, (PreparedStatement pstmt) ->{
-            pstmt.setString(1, user.getPassword());
-            pstmt.setString(2, user.getName());
-            pstmt.setString(3, user.getEmail());
-            pstmt.setString(4, user.getUserId());
-        });
+        jdbcTemplate.update(sql, user.getPassword(), user.getName(), user.getEmail(), user.getUserId());
     }
 
     public User findByUserId(String userId) throws SQLException {
