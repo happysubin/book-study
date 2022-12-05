@@ -25,7 +25,7 @@ public class UserDaoTest {
 
     @Test
     public void crud() throws Exception {
-        User expected = new User("userId", "password", "name", "javajigi@email.com");
+        User expected = new User("user12", "password12", "name12", "11@112");
         UserDao userDao = new UserDao();
         userDao.insert(expected);
 
@@ -46,11 +46,11 @@ public class UserDaoTest {
     public void update() throws Exception {
         //given
         UserDao userDao = new UserDao();
-        User update = new User("pass", "name2", "123@123.com");
-        userDao.update("userId", update);
+        User update = new User("userId4","pass", "name2", "123@123.com");
+        userDao.update(update);
 
         //when
-        User user = userDao.findByUserId("userId");
+        User user = userDao.findByUserId("userId4");
         assertEquals(user.getEmail(), update.getEmail());
         assertEquals(user.getName(), update.getName());
 
