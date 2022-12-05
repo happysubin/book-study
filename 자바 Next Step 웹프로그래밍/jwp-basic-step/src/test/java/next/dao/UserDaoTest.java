@@ -46,11 +46,11 @@ public class UserDaoTest {
     public void update() throws Exception {
         //given
         UserDao userDao = new UserDao();
-        User update = new User("userId4","pass", "name2", "123@123.com");
+        User update = new User("user12","pass", "name2", "123@123.com");
         userDao.update(update);
 
         //when
-        User user = userDao.findByUserId("userId4");
+        User user = userDao.findByUserId("user12");
         assertEquals(user.getEmail(), update.getEmail());
         assertEquals(user.getName(), update.getName());
 

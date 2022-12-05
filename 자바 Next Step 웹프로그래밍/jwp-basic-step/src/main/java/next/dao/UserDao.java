@@ -21,6 +21,14 @@ public class UserDao {
                 String sql = "INSERT INTO USERS VALUES (?, ?, ?, ?)";
                 return sql;
             }
+
+            @Override
+            protected void setValues(User user, PreparedStatement pstmt) throws SQLException {
+                pstmt.setString(1, user.getUserId());
+                pstmt.setString(2, user.getPassword());
+                pstmt.setString(3, user.getName());
+                pstmt.setString(4, user.getEmail());
+            }
         };
         jdbcTemplate.query(user);
     }
@@ -32,6 +40,14 @@ public class UserDao {
             protected String createQuery() {
                 String sql = "UPDATE USERS SET password = ?, name = ?, email = ? WHERE userId = ?;";
                 return sql;
+            }
+
+            @Override
+            protected void setValues(User user, PreparedStatement pstmt) throws SQLException {
+                pstmt.setString(1, user.getPassword());
+                pstmt.setString(2, user.getName());
+                pstmt.setString(3, user.getEmail());
+                pstmt.setString(4, user.getUserId());
             }
         };
         jdbcTemplate.query(user);

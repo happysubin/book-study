@@ -18,11 +18,9 @@ public abstract class JdbcTemplate {
             pstmt = con.prepareStatement(sql);
             setValues(user, pstmt);
             pstmt.executeUpdate();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             if (pstmt != null) {
                 pstmt.close();
             }
@@ -35,10 +33,6 @@ public abstract class JdbcTemplate {
 
     protected abstract String createQuery();
 
-    void setValues(User user, PreparedStatement pstmt) throws SQLException {
-        pstmt.setString(1, user.getPassword());
-        pstmt.setString(2, user.getName());
-        pstmt.setString(3, user.getEmail());
-        pstmt.setString(4, user.getUserId());
-    }
+    protected abstract void setValues(User user, PreparedStatement pstmt) throws SQLException;
+
 }
