@@ -25,13 +25,13 @@ public class JdbcTemplate {
     }
 
     @SuppressWarnings("rawtypes")
-    public List query(String sql, RowMapper mapper) throws SQLException {
+    public <T> List<T> query(String sql, RowMapper<T> mapper) throws SQLException {
         try(
                 Connection con = ConnectionManager.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(sql);
                 ResultSet rs = pstmt.executeQuery();
         ){
-            ArrayList<Object> result = new ArrayList<>();
+            ArrayList<T> result = new ArrayList<>();
             while(rs.next()){
                 result.add(mapper.mapRow(rs));
             }
@@ -43,7 +43,7 @@ public class JdbcTemplate {
         }
     }
 
-    public Object queryForObject(String sql, PreparedStatementSetter setter, RowMapper mapper) throws SQLException {
+    public <T> T queryForObject(String sql, PreparedStatementSetter setter, RowMapper<T> mapper) throws SQLException {
         ResultSet rs = null;
 
         try(

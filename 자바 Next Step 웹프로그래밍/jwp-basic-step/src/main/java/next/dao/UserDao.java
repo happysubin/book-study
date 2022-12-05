@@ -41,11 +41,11 @@ public class UserDao {
         String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
-        return (User) jdbcTemplate.queryForObject(
+        return jdbcTemplate.queryForObject(
                 sql,
                 (PreparedStatement pstmt) -> pstmt.setString(1, userId),
                 (ResultSet rs) -> {
-                    Object user = null;
+                    User user = null;
                     if (rs.next()) {
                         user = new User(
                                 rs.getString("userId"),
@@ -64,10 +64,10 @@ public class UserDao {
         String sql = "SELECT userId, password, name, email FROM USERS";
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
-        return (List<User>) jdbcTemplate.query(sql, (ResultSet rs) -> new User(
-                                        rs.getString("userId"),
-                                        rs.getString("password"),
-                                        rs.getString("name"),
-                                        rs.getString("email")));
+        return jdbcTemplate.query(sql, (ResultSet rs) -> new User(
+                rs.getString("userId"),
+                rs.getString("password"),
+                rs.getString("name"),
+                rs.getString("email")));
     }
 }
