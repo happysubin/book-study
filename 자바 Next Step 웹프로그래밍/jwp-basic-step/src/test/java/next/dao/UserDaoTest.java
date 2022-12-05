@@ -25,7 +25,7 @@ public class UserDaoTest {
 
     @Test
     public void crud() throws Exception {
-        User expected = new User("user12", "password12", "name12", "11@112");
+        User expected = new User("user146", "password12", "name12", "11@112");
         UserDao userDao = new UserDao();
         userDao.insert(expected);
 
@@ -37,6 +37,7 @@ public class UserDaoTest {
     public void finalAll() throws Exception {
         UserDao userDao = new UserDao();
         List<User> allUser = userDao.findAllUser();
+        System.out.println("allUser.size() = " + allUser.size());
         for (User user : allUser) {
             System.out.println("user = " + user.toString());
         }
@@ -46,14 +47,13 @@ public class UserDaoTest {
     public void update() throws Exception {
         //given
         UserDao userDao = new UserDao();
-        User update = new User("user12","pass", "name2", "123@123.com");
+        User update = new User("user14","pass", "name2", "123@123.com");
         userDao.update(update);
 
         //when
-        User user = userDao.findByUserId("user12");
+        User user = userDao.findByUserId("user13");
         assertEquals(user.getEmail(), update.getEmail());
         assertEquals(user.getName(), update.getName());
 
     }
-
 }
