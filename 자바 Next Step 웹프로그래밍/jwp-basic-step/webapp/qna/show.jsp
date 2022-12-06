@@ -154,9 +154,10 @@
     }
 
     function onSuccess(json, status){
-        var answer = json.answer;
+        console.log(json)
+
         var answerTemplate = $("#answerTemplate").html();
-        var template = answerTemplate.format(answer.writer, new Date(answer.createdDate), answer.contents, answer.answerId, answer.answerId);
+        var template = answerTemplate.format(json.writer, new Date(json.createdDate), json.contents, json.answerId, json.answerId);
         $(".qna-comment-slipp-articles").prepend(template);
     }
 
@@ -182,8 +183,8 @@
                 alert("error");
             },
             success: function (json, status) {
-                var result = json.result;
-                if (result.status) {
+                console.log(json)
+                if (json.status) {
                     deleteBtn.closest('article').remove();
                 }
             }
