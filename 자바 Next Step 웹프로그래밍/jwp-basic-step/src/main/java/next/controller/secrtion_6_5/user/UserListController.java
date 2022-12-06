@@ -1,7 +1,8 @@
-package next.controller.secrtion_6_5;
+package next.controller.secrtion_6_5.user;
 
 import core.db.DataBase;
 import core.mvc.section_6_5.Controller;
+import next.controller.secrtion_6_5.UserSessionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

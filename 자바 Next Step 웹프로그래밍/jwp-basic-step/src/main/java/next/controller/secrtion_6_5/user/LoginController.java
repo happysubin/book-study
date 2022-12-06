@@ -1,7 +1,9 @@
-package next.controller.secrtion_6_5;
+package next.controller.secrtion_6_5.user;
 
 import core.db.DataBase;
 import core.mvc.section_6_5.Controller;
+import next.controller.secrtion_6_5.UserSessionUtils;
+import next.dao.UserDao;
 import next.model.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +15,9 @@ public class LoginController implements Controller {
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         String userId = req.getParameter("userId");
         String password = req.getParameter("password");
-        User user = DataBase.findUserById(userId);
+
+        UserDao userDao = new UserDao();
+        User user = userDao.findByUserId(userId);
         if (user == null) {
             req.setAttribute("loginFailed", true);
             return "/user/login.jsp";

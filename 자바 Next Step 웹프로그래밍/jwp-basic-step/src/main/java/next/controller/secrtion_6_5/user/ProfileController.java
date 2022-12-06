@@ -1,4 +1,4 @@
-package next.controller.secrtion_6_5;
+package next.controller.secrtion_6_5.user;
 
 import core.db.DataBase;
 import core.mvc.section_6_5.Controller;
