@@ -12,7 +12,7 @@
 // });
 // });
 
-$(".answerWrite input[type=submit]").click(addAnswer);
+$(".answerWrite input[type=button]").click(addAnswer);
 
 function addAnswer(e) {
   console.log(e)

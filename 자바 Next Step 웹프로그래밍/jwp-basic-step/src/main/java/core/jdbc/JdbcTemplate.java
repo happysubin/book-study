@@ -93,8 +93,12 @@ public class JdbcTemplate {
         return queryForObject(sql, rm, createPreparedStatementSetter(parameters));
     }
 
-    public <T> List<T> query(String sql, RowMapper<T> rm, Object... parameters) {
-        return query(sql, rm, createPreparedStatementSetter(parameters));
+    public <T> T queryForObject(String sql, RowMapper<T> rm, PreparedStatementSetter pss) {
+        List<T> list = query(sql, rm, pss);
+        if (list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
     }
 
     public <T> List<T> query(String sql, RowMapper<T> rm, PreparedStatementSetter pss) throws DataAccessException {
@@ -120,6 +124,10 @@ public class JdbcTemplate {
                 throw new DataAccessException(e);
             }
         }
+    }
+
+    public <T> List<T> query(String sql, RowMapper<T> rm, Object... parameters) {
+        return query(sql, rm, createPreparedStatementSetter(parameters));
     }
 
     private PreparedStatementSetter createPreparedStatementSetter(Object... parameters) {
