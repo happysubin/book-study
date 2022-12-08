@@ -2,6 +2,9 @@ package next.controller.secrtion_6_5.qna;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import core.mvc.section_6_5.Controller;
+import core.mvc.section_8_3.JsonView;
+import core.mvc.section_8_3.ModelAndView;
+import core.mvc.section_8_3.View;
 import next.dao.AnswerDao;
 import next.model.Answer;
 import org.slf4j.Logger;
@@ -15,18 +18,19 @@ public class AddAnswerController implements Controller {
     private static final Logger log = LoggerFactory.getLogger(AddAnswerController.class);
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        Answer answer = new Answer(req.getParameter("writer"), req.getParameter("contents"),
+    public ModelAndView execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+
+        Answer answer = new Answer(
+                req.getParameter("writer"),
+                req.getParameter("contents"),
                 Long.parseLong(req.getParameter("questionId")));
         log.debug("answer : {}", answer);
 
         AnswerDao answerDao = new AnswerDao();
         Answer savedAnswer = answerDao.insert(answer);
-        ObjectMapper mapper = new ObjectMapper();
-        resp.setContentType("application/json;charset=UTF-8");
-        PrintWriter out = resp.getWriter();
-        System.out.println("savedAnswer = " + savedAnswer.toString());
-        out.print(mapper.writeValueAsString(savedAnswer));
-        return null;
+
+        ModelAndView modelAndView = new ModelAndView(new JsonView());
+        modelAndView.setModelData("savedAnswer", savedAnswer);
+        return modelAndView;
     }
 }

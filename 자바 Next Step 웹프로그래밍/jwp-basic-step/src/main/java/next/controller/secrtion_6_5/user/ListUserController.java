@@ -2,6 +2,9 @@ package next.controller.secrtion_6_5.user;
 
 import core.db.DataBase;
 import core.mvc.section_6_5.Controller;
+import core.mvc.section_8_3.JspView;
+import core.mvc.section_8_3.ModelAndView;
+import core.mvc.section_8_3.View;
 import next.controller.secrtion_6_5.UserSessionUtils;
 import next.dao.UserDao;
 
@@ -10,13 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 
 public class ListUserController implements Controller {
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    public ModelAndView execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+
         if (!UserSessionUtils.isLogined(req.getSession())) {
-            return "redirect:/users/loginForm";
+            return new ModelAndView(new JspView("redirect:/users/loginForm"));
         }
 
         UserDao userDao = new UserDao();
-        req.setAttribute("users", userDao.findAllUser() );
-        return "/user/list.jsp";
+        ModelAndView modelAndView = new ModelAndView(new JspView("/user/list.jsp"));
+        modelAndView.setModelData("users", userDao.findAllUser());
+        return modelAndView;
     }
 }

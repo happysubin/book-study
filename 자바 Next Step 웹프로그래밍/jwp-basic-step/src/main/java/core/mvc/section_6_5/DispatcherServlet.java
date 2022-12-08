@@ -1,5 +1,7 @@
 package core.mvc.section_6_5;
 
+import core.mvc.section_8_3.ModelAndView;
+import core.mvc.section_8_3.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,12 +12,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet(name = "dispatcher", urlPatterns = "/", loadOnStartup = 1)
 public class DispatcherServlet extends HttpServlet {
+
     private static final long serialVersionUID = 1L;
     private static final Logger logger = LoggerFactory.getLogger(DispatcherServlet.class);
-    private static final String DEFAULT_REDIRECT_PREFIX = "redirect:";
 
     private RequestMapping rm;
 
@@ -33,8 +38,8 @@ public class DispatcherServlet extends HttpServlet {
         System.out.println("requestUri = " + requestUri);
         Controller controller = rm.findController(requestUri);
         try {
-            String viewName = controller.execute(req, resp);
-            move(viewName, req, resp);
+            ModelAndView modelAndView = controller.execute(req, resp);
+            modelAndView.render(req, resp);
         } catch (Throwable e) {
             logger.error("Exception : {}", e);
             e.printStackTrace();
@@ -42,19 +47,5 @@ public class DispatcherServlet extends HttpServlet {
         }
     }
 
-    private void move(String viewName, HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
 
-        if(viewName == null){
-            return;
-        }
-
-        if (viewName.startsWith(DEFAULT_REDIRECT_PREFIX)) {
-            resp.sendRedirect(viewName.substring(DEFAULT_REDIRECT_PREFIX.length()));
-            return;
-        }
-
-        RequestDispatcher rd = req.getRequestDispatcher(viewName);
-        rd.forward(req, resp);
-    }
 }
