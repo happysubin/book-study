@@ -17,6 +17,7 @@ import next.controller.user.UpdateUserController;
 import next.dao.AnswerDao;
 import next.dao.QuestionDao;
 import next.dao.UserDao;
+import next.service.QuestionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +31,7 @@ public class RequestMapping {
         UserDao userDao = new UserDao(jdbcTemplate);
         QuestionDao questionDao = new QuestionDao(jdbcTemplate);
         AnswerDao answerDao = new AnswerDao(jdbcTemplate);
+        QuestionService questionService = new QuestionService(questionDao, userDao);
 
         mappings.put("/", new HomeController(questionDao));
         mappings.put("/users/form", new ForwardController("/user/form.jsp"));
@@ -49,6 +51,8 @@ public class RequestMapping {
         mappings.put("/api/qna/list", new ListQuestionController(questionDao));
         mappings.put("/qna/updateForm", new UpdateFormQuestionController(questionDao));
         mappings.put("/qna/update", new UpdateQuestionController(questionDao));
+        mappings.put("/api/qna/delete", new DeleteQuestionRestController(questionService));
+        mappings.put("/qna/delete", new DeleteQuestionController(questionService));
 
         logger.info("Initialized Request Mapping!");
     }

@@ -92,4 +92,8 @@ public class Question {
     public boolean isWriter(User user) {
         return user.isSameUser(this.writer);
     }
+
+    public boolean hasComment(){
+        return this.countOfComment > 0;
+    }
 }
