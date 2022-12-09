@@ -36,7 +36,8 @@
 					<div class="article-util">
 						<ul class="article-util-list">
 							<li>
-								<a class="link-modify-article" href="#">수정</a>
+
+							<a class="link-modify-article" href="/qna/updateForm?questionId=${question.questionId}">수정</a>
 							</li>
 							<li>
 								<form class="form-delete" action="#" method="POST">
@@ -55,60 +56,37 @@
 					<div class="qna-comment-slipp">
 						<p class="qna-comment-count"><strong>${question.countOfComment}</strong>개의 의견</p>
 						<div class="qna-comment-slipp-articles">
-							<article class="article">
-								<div class="article-header">
-									<div class="article-header-thumb">
-										<img src="https://graph.facebook.com/v2.3/1324855987/picture" class="article-author-thumb" alt="">
+
+							<c:forEach items="${answers}" var="each">
+								<article class="article">
+									<div class="article-header">
+										<div class="article-header-thumb">
+											<img src="https://graph.facebook.com/v2.3/1324855987/picture" class="article-author-thumb" alt="">
+										</div>
+										<div class="article-header-text">
+												${each.writer}
+											<div class="article-header-time"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${each.createdDate}" /></div>
+										</div>
 									</div>
-									<div class="article-header-text">
-										Toby Lee
-										<div class="article-header-time">2016-02-15 13:13:45</div>
+									<div class="article-doc comment-doc">
+										<p>${each.contents}</p>
 									</div>
-								</div>
-								<div class="article-doc comment-doc">
-									<p>람다식에서 사용되는 변수라면 람다식 내부에서 정의된 로컬 변수이거나 람다식이 선언된 외부의 변수를 참조하는 것일텐데, 전자라면 아무리 변경해도 문제될 이유가 없고, 후자는 변경 자체가 허용이 안될텐데. 이 설명이 무슨 뜻인지 이해가 안 됨.</p>
-								</div>
-								<div class="article-util">
-									<ul class="article-util-list">
-										<li>
-											<a class="link-modify-article" href="/api/qna/updateAnswer?answerId=5">수정</a>
-										</li>
-										<li>
-											<form class="form-delete" action="/api/qna/deleteAnswer" method="POST">
-												<input type="hidden" name="answerId" value="5">
-												<button type="submit" class="link-delete-article">삭제</button>
-											</form>
-										</li>
-									</ul>
-								</div>
-							</article>
-							<article class="article">
-								<div class="article-header">
-									<div class="article-header-thumb">
-										<img src="https://graph.facebook.com/v2.3/1324855987/picture" class="article-author-thumb" alt="">
+									<div class="article-util">
+										<ul class="article-util-list">
+											<li>
+												<a class="link-modify-article" href="/api/qna/updateAnswer?answerId=${each.answerId}">수정</a>
+											</li>
+											<li>
+												<form class="form-delete" action="/api/qna/deleteAnswer" method="POST">
+													<input type="hidden" name="answerId" value="${each.answerId}" />
+													<button type="submit" class="link-delete-article">삭제</button>
+												</form>
+											</li>
+										</ul>
 									</div>
-									<div class="article-header-text">
-										Toby Lee
-										<div class="article-header-time">2016-02-15 13:13:45</div>
-									</div>
-								</div>
-								<div class="article-doc comment-doc">
-									<p>람다식에서 사용되는 변수라면 람다식 내부에서 정의된 로컬 변수이거나 람다식이 선언된 외부의 변수를 참조하는 것일텐데, 전자라면 아무리 변경해도 문제될 이유가 없고, 후자는 변경 자체가 허용이 안될텐데. 이 설명이 무슨 뜻인지 이해가 안 됨.</p>
-								</div>
-								<div class="article-util">
-									<ul class="article-util-list">
-										<li>
-											<a class="link-modify-article" href="/api/qna/updateAnswer?answerId=5">수정</a>
-										</li>
-										<li>
-											<form class="form-delete" action="/api/qna/deleteAnswer" method="POST">
-												<input type="hidden" name="answerId" value="5">
-												<button type="submit" class="link-delete-article">삭제</button>
-											</form>
-										</li>
-									</ul>
-								</div>
-							</article>
+								</article>
+							</c:forEach>
+
 							<div class="answerWrite">
                             <form name="answer" method="post">
 								<input type="hidden" name="questionId" value="${question.questionId}">
@@ -160,5 +138,68 @@
 	</article>
 </script>
 <%@ include file="/include/footer.jspf" %>
+<script>
+	$(".answerWrite input[type=submit]").click(addAnswer);
+
+	function addAnswer(e) {
+		e.preventDefault();
+
+		console.log(e)
+		var queryString = $("form[name=answer]").serialize();
+
+		$.ajax({
+			type : 'post',
+			url : '/api/qna/addAnswer',
+			data : queryString,
+			dataType : 'json',
+			error: onError,
+			success : onSuccess,
+		});
+	}
+
+	function onSuccess(json, status){
+		var answer = json.answer;
+		var answerTemplate = $("#answerTemplate").html();
+		var template = answerTemplate.format(answer.writer, new Date(answer.createdDate), answer.contents, answer.answerId, answer.answerId);
+		$(".qna-comment-slipp-articles").prepend(template);
+	}
+
+	function onError(xhr, status) {
+		alert("error");
+	}
+
+	$(".qna-comment").on("click", ".form-delete", deleteAnswer);
+	function deleteAnswer(e) {
+		e.preventDefault();
+		var deleteBtn = $(this);
+		var queryString = deleteBtn.closest("form").serialize();
+		console.log("qs : " + queryString);
+		$.ajax({
+			type: 'post',
+			url: "/api/qna/deleteAnswer",
+			data: queryString,
+			dataType: 'json',
+			error: function (xhr, status) {
+				alert("error");
+			},
+			success: function (json, status) {
+				console.log(json)
+				if (json.result.status) {
+					deleteBtn.closest('article').remove();
+				}
+			}
+		});
+	}
+
+	String.prototype.format = function() {
+		var args = arguments;
+		return this.replace(/{(\d+)}/g, function(match, number) {
+			return typeof args[number] != 'undefined'
+					? args[number]
+					: match
+					;
+		});
+	};
+</script>
 </body>
 </html>

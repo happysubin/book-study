@@ -3,10 +3,9 @@ package core.mvc;
 import java.util.HashMap;
 import java.util.Map;
 
+import core.jdbc.JdbcTemplate;
 import next.controller.HomeController;
-import next.controller.qna.AddAnswerController;
-import next.controller.qna.DeleteAnswerController;
-import next.controller.qna.ShowController;
+import next.controller.qna.*;
 import next.controller.user.CreateUserController;
 import next.controller.user.ListUserController;
 import next.controller.user.LoginController;
@@ -15,6 +14,9 @@ import next.controller.user.ProfileController;
 import next.controller.user.UpdateFormUserController;
 import next.controller.user.UpdateUserController;
 
+import next.dao.AnswerDao;
+import next.dao.QuestionDao;
+import next.dao.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,20 +25,30 @@ public class RequestMapping {
     private Map<String, Controller> mappings = new HashMap<>();
 
     void initMapping() {
-        mappings.put("/", new HomeController());
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        UserDao userDao = new UserDao(jdbcTemplate);
+        QuestionDao questionDao = new QuestionDao(jdbcTemplate);
+        AnswerDao answerDao = new AnswerDao(jdbcTemplate);
+
+        mappings.put("/", new HomeController(questionDao));
         mappings.put("/users/form", new ForwardController("/user/form.jsp"));
         mappings.put("/users/loginForm", new ForwardController("/user/login.jsp"));
-        mappings.put("/users", new ListUserController());
-        mappings.put("/users/login", new LoginController());
-        mappings.put("/users/profile", new ProfileController());
+        mappings.put("/users", new ListUserController(userDao));
+        mappings.put("/users/login", new LoginController(userDao));
+        mappings.put("/users/profile", new ProfileController(userDao));
         mappings.put("/users/logout", new LogoutController());
-        mappings.put("/users/create", new CreateUserController());
-        mappings.put("/users/updateForm", new UpdateFormUserController());
-        mappings.put("/users/update", new UpdateUserController());
+        mappings.put("/users/create", new CreateUserController(userDao));
+        mappings.put("/users/updateForm", new UpdateFormUserController(userDao));
+        mappings.put("/users/update", new UpdateUserController(userDao));
         mappings.put("/qna/form", new ForwardController("/qna/form.jsp"));
-        mappings.put("/qna/show", new ShowController());
-        mappings.put("/api/qna/addAnswer", new AddAnswerController());
-        mappings.put("/api/qna/deleteAnswer", new DeleteAnswerController());
+        mappings.put("/qna/show", new ShowController(questionDao, answerDao));
+        mappings.put("/api/qna/addAnswer", new AddAnswerController(answerDao, questionDao));
+        mappings.put("/api/qna/deleteAnswer", new DeleteAnswerController(answerDao));
+        mappings.put("/qna/create", new CreateQuestionController(questionDao));
+        mappings.put("/api/qna/list", new ListQuestionController(questionDao));
+        mappings.put("/qna/updateForm", new UpdateFormQuestionController(questionDao));
+        mappings.put("/qna/update", new UpdateQuestionController(questionDao));
 
         logger.info("Initialized Request Mapping!");
     }

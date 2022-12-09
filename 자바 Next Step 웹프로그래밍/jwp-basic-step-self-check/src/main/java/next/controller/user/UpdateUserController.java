@@ -14,8 +14,14 @@ import core.mvc.AbstractController;
 import core.mvc.ModelAndView;
 
 public class UpdateUserController extends AbstractController {
-    private UserDao userDao = new UserDao();
+
     private static final Logger log = LoggerFactory.getLogger(UpdateUserController.class);
+
+    private UserDao userDao;
+
+    public UpdateUserController(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public ModelAndView execute(HttpServletRequest req, HttpServletResponse response) throws Exception {
@@ -25,8 +31,12 @@ public class UpdateUserController extends AbstractController {
             throw new IllegalStateException("다른 사용자의 정보를 수정할 수 없습니다.");
         }
 
-        User updateUser = new User(req.getParameter("userId"), req.getParameter("password"), req.getParameter("name"),
-                req.getParameter("email"));
+        User updateUser = new User(
+                req.getParameter("userId"),
+                req.getParameter("password"),
+                req.getParameter("name"),
+                req.getParameter("email")
+        );
         log.debug("Update User : {}", updateUser);
         user.update(updateUser);
         return jspView("redirect:/");

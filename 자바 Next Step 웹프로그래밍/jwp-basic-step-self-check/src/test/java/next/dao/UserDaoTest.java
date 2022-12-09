@@ -2,6 +2,7 @@ package next.dao;
 
 import static org.junit.Assert.*;
 
+import core.jdbc.JdbcTemplate;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -22,7 +23,7 @@ public class UserDaoTest {
     @Test
     public void crud() throws Exception {
         User expected = new User("userId", "password", "name", "javajigi@email.com");
-        UserDao userDao = new UserDao();
+        UserDao userDao = new UserDao(new JdbcTemplate());
         userDao.insert(expected);
 
         User actual = userDao.findByUserId(expected.getUserId());

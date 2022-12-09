@@ -43,8 +43,12 @@ public class User {
         return this.password.equals(password);
     }
 
+    public boolean isSameUser(String writer) {
+        return this.userId.equals(writer);
+    }
+
     public boolean isSameUser(User user) {
-        return userId.equals(user.userId);
+        return isSameUser(user.getUserId());
     }
 
     @Override

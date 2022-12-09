@@ -13,9 +13,14 @@ import core.mvc.AbstractController;
 import core.mvc.ModelAndView;
 
 public class CreateUserController extends AbstractController {
+
     private static final Logger log = LoggerFactory.getLogger(CreateUserController.class);
 
-    private UserDao userDao = new UserDao();
+    private UserDao userDao;
+
+    public CreateUserController(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {

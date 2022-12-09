@@ -8,7 +8,12 @@ import core.mvc.AbstractController;
 import core.mvc.ModelAndView;
 
 public class HomeController extends AbstractController {
-    private QuestionDao questionDao = new QuestionDao();
+
+    private QuestionDao questionDao;
+
+    public HomeController(QuestionDao questionDao) {
+        this.questionDao = questionDao;
+    }
 
     @Override
     public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {

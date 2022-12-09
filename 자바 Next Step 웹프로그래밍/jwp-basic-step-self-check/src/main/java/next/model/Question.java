@@ -29,6 +29,10 @@ public class Question {
         this.countOfComment = countOfComment;
     }
 
+    public Question(long questionId, String writer, String title, String contents) {
+        this(questionId, writer, title, contents, new Date(), 0);
+    }
+
     public long getQuestionId() {
         return questionId;
     }
@@ -83,5 +87,9 @@ public class Question {
         if (questionId != other.questionId)
             return false;
         return true;
+    }
+
+    public boolean isWriter(User user) {
+        return user.isSameUser(this.writer);
     }
 }
