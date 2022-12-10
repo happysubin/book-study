@@ -21,7 +21,7 @@ public class Dish {
         return vegetarian;
     }
 
-    public int getCalories() {
+    public Integer getCalories() {
         return calories;
     }
 
@@ -29,9 +29,10 @@ public class Dish {
         return type;
     }
 
-    enum Type{
+    public enum Type{
         MEAT, FISH, OTHER;
     }
+
 
     @Override
     public String toString() {
