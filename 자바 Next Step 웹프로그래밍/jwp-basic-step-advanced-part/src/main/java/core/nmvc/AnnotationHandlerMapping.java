@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.google.common.collect.Maps;
 
 import core.annotation.RequestMethod;
+import org.reflections.ReflectionUtils;
 
 public class AnnotationHandlerMapping {
     private Object[] basePackage;
@@ -18,7 +19,7 @@ public class AnnotationHandlerMapping {
     }
 
     public void initialize() {
-
+        ReflectionUtils.getAllMethods()
     }
 
     public HandlerExecution getHandler(HttpServletRequest request) {

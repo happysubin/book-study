@@ -101,5 +101,6 @@ public class LambdaTest {
 
         System.out.println("collect = " + collect);
 
+
     }
 }

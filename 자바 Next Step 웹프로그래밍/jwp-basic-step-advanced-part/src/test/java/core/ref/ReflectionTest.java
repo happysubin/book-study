@@ -1,5 +1,6 @@
 package core.ref;
 
+import core.nmvc.ControllerScanner;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,5 +57,10 @@ public class ReflectionTest {
 
         System.out.println("student = " + student);
         logger.debug(clazz.getName());
+    }
+
+    @Test
+    public void controllerAnnotationTest() throws Exception{
+        ControllerScanner.initRequestMapping();
     }
 }
