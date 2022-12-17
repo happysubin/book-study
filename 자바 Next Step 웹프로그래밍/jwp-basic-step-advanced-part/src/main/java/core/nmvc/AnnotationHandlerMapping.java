@@ -15,22 +15,21 @@ import org.reflections.ReflectionUtils;
 
 public class AnnotationHandlerMapping implements HandlerMapping{
 
-    private Object[] basePackage;
+    private String basePackage;
 
     private Map<HandlerKey, HandlerExecution> handlerExecutions = Maps.newHashMap();
 
-    public AnnotationHandlerMapping(Object... basePackage) {
+    public AnnotationHandlerMapping(String basePackage) {
         this.basePackage = basePackage;
     }
 
     public void initialize() {
-        ControllerScanner.initRequestMapping();
+        ControllerScanner.initRequestMapping(basePackage);
         ControllerScanner
                 .getControllers()
                 .entrySet()
                 .forEach(entry -> {
-                    Set<Method> methods = ReflectionUtils.getAllMethods(entry.getKey(), ReflectionUtils.withAnnotation(RequestMapping.class));
-                    methods
+                    ReflectionUtils.getAllMethods(entry.getKey(), ReflectionUtils.withAnnotation(RequestMapping.class))
                             .forEach(method -> {
                                 RequestMapping annotation = method.getAnnotation(RequestMapping.class);
                                 handlerExecutions.put(new HandlerKey(annotation.value(), annotation.method()), new HandlerExecution(method, entry.getValue()));

@@ -62,8 +62,8 @@ public class ReflectionTest {
 
     @Test
     public void controllerAnnotationTest() throws Exception{
-        ControllerScanner.initRequestMapping();
-        AnnotationHandlerMapping annotationHandlerMapping = new AnnotationHandlerMapping();
-        annotationHandlerMapping.initialize();
+//        ControllerScanner.initRequestMapping("next.controller");
+//        AnnotationHandlerMapping annotationHandlerMapping = new AnnotationHandlerMapping();
+//        annotationHandlerMapping.initialize();
     }
 }

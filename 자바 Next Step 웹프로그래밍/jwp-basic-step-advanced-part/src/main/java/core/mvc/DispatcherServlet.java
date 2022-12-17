@@ -29,7 +29,7 @@ public class DispatcherServlet extends HttpServlet {
         LegacyHandlerMapping legacyHandlerMapping = new LegacyHandlerMapping();
         legacyHandlerMapping.initMapping();;
 
-        AnnotationHandlerMapping annotationHandlerMapping = new AnnotationHandlerMapping();
+        AnnotationHandlerMapping annotationHandlerMapping = new AnnotationHandlerMapping("next.controller");
         annotationHandlerMapping.initialize();
 
         rm.add(legacyHandlerMapping);
@@ -42,28 +42,31 @@ public class DispatcherServlet extends HttpServlet {
         logger.debug("Method : {}, Request URI : {}", req.getMethod(), requestUri);
 
         Object handler = getHandler(req);
-
-        ModelAndView mav;
         try {
-            if(handler instanceof HandlerExecution){
-                HandlerExecution handlerExecution = (HandlerExecution) handler;
-                mav = handlerExecution.handle(req, resp);
-                View view = mav.getView();
-                view.render(mav.getModel(), req, resp);
-            }
-
-            else if( handler instanceof Controller){
-                Controller controller = (Controller) handler;
-                mav = controller.execute(req, resp);
-                View view = mav.getView();
-                view.render(mav.getModel(), req, resp);
-            }
-            else{
-                throw new RuntimeException("지원하는 컨트롤러, 핸들러가 아닙니다");
-            }
+            execute(req, resp, handler);
         } catch (Throwable e) {
             logger.error("Exception : {}", e);
             throw new ServletException(e.getMessage());
+        }
+    }
+
+    private void execute(HttpServletRequest req, HttpServletResponse resp, Object handler) throws Exception {
+        ModelAndView mav;
+        if(handler instanceof HandlerExecution){
+            HandlerExecution handlerExecution = (HandlerExecution) handler;
+            mav = handlerExecution.handle(req, resp);
+            View view = mav.getView();
+            view.render(mav.getModel(), req, resp);
+        }
+
+        else if( handler instanceof Controller){
+            Controller controller = (Controller) handler;
+            mav = controller.execute(req, resp);
+            View view = mav.getView();
+            view.render(mav.getModel(), req, resp);
+        }
+        else{
+            throw new RuntimeException("지원하는 컨트롤러, 핸들러가 아닙니다");
         }
     }
 
@@ -74,7 +77,6 @@ public class DispatcherServlet extends HttpServlet {
                 return handler;
             }
         }
-
         return null;
     }
 }

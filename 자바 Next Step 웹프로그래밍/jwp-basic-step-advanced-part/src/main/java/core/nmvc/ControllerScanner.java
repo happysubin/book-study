@@ -12,8 +12,8 @@ public class ControllerScanner {
     
     private static Map<Class<?>, Object > map = new HashMap<>();
 
-    public static Map<Class<?>, Object > initRequestMapping(){
-        Reflections reflections = new Reflections("next.controller");
+    public static Map<Class<?>, Object > initRequestMapping(String basePackage){
+        Reflections reflections = new Reflections(basePackage);
         putControllerWithAnnotationInMap(reflections);
         return map;
     }

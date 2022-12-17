@@ -7,6 +7,7 @@ import core.annotation.Controller;
 import core.annotation.RequestMapping;
 import core.annotation.RequestMethod;
 import core.mvc.JspView;
+import core.nmvc.AbstractNewController;
 import next.dao.QuestionDao;
 import core.mvc.AbstractController;
 import core.mvc.ModelAndView;
@@ -28,12 +29,13 @@ import core.mvc.ModelAndView;
 //}
 
 @Controller
-public class HomeController {
+public class HomeController extends AbstractNewController {
 
     private QuestionDao questionDao = QuestionDao.getInstance();
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView getHome(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView(new JspView("home.jsp"));
+        return jspView("home.jsp").addObject("questions", questionDao.findAll());
+
     }
 }

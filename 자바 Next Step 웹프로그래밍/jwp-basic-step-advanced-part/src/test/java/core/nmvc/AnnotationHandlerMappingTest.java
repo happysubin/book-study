@@ -15,6 +15,8 @@ public class AnnotationHandlerMappingTest {
 
     @Before
     public void setup() {
+
+        ControllerScanner.initRequestMapping("core.nmvc");
         handlerMapping = new AnnotationHandlerMapping("core.nmvc");
         handlerMapping.initialize();
 
