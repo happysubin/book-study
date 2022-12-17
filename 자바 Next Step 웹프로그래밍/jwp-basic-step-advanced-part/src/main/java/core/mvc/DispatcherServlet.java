@@ -10,9 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import core.nmvc.AnnotationHandlerMapping;
-import core.nmvc.HandlerExecution;
-import core.nmvc.HandlerMapping;
+import com.google.common.collect.Lists;
+import core.nmvc.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +20,7 @@ public class DispatcherServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = LoggerFactory.getLogger(DispatcherServlet.class);
 
+    private List<HandlerAdapter> adapters = Lists.newArrayList();
     private List<HandlerMapping> rm = new ArrayList<>();
 
     @Override
@@ -34,6 +34,9 @@ public class DispatcherServlet extends HttpServlet {
 
         rm.add(legacyHandlerMapping);
         rm.add(annotationHandlerMapping);
+
+        adapters.add(new ControllerHandlerAdapter());
+        adapters.add(new HandlerExecutionHandlerAdapter());
     }
 
     @Override
@@ -43,30 +46,12 @@ public class DispatcherServlet extends HttpServlet {
 
         Object handler = getHandler(req);
         try {
-            execute(req, resp, handler);
+            ModelAndView mav = execute(req, resp, handler);
+            View view = mav.getView();
+            view.render(mav.getModel(), req, resp);
         } catch (Throwable e) {
             logger.error("Exception : {}", e);
             throw new ServletException(e.getMessage());
-        }
-    }
-
-    private void execute(HttpServletRequest req, HttpServletResponse resp, Object handler) throws Exception {
-        ModelAndView mav;
-        if(handler instanceof HandlerExecution){
-            HandlerExecution handlerExecution = (HandlerExecution) handler;
-            mav = handlerExecution.handle(req, resp);
-            View view = mav.getView();
-            view.render(mav.getModel(), req, resp);
-        }
-
-        else if( handler instanceof Controller){
-            Controller controller = (Controller) handler;
-            mav = controller.execute(req, resp);
-            View view = mav.getView();
-            view.render(mav.getModel(), req, resp);
-        }
-        else{
-            throw new RuntimeException("지원하는 컨트롤러, 핸들러가 아닙니다");
         }
     }
 
@@ -75,6 +60,15 @@ public class DispatcherServlet extends HttpServlet {
             Object handler = handlerMapping.getHandler(request);
             if(handler != null){
                 return handler;
+            }
+        }
+        return null;
+    }
+
+    private ModelAndView execute(HttpServletRequest req, HttpServletResponse resp, Object handler) throws Exception {
+        for (HandlerAdapter adapter : adapters) {
+            if(adapter.supports(handler)){
+                return adapter.handle(req, resp, handler);
             }
         }
         return null;
