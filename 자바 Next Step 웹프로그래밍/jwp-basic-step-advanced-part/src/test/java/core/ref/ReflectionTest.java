@@ -1,5 +1,6 @@
 package core.ref;
 
+import core.nmvc.AnnotationHandlerMapping;
 import core.nmvc.ControllerScanner;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -62,5 +63,7 @@ public class ReflectionTest {
     @Test
     public void controllerAnnotationTest() throws Exception{
         ControllerScanner.initRequestMapping();
+        AnnotationHandlerMapping annotationHandlerMapping = new AnnotationHandlerMapping();
+        annotationHandlerMapping.initialize();
     }
 }

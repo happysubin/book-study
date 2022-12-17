@@ -1,7 +1,7 @@
 package core.nmvc;
 
+
 import core.annotation.Controller;
-import org.reflections.ReflectionUtils;
 import org.reflections.Reflections;
 
 import java.lang.reflect.InvocationTargetException;
@@ -10,14 +10,12 @@ import java.util.Map;
 
 public class ControllerScanner {
     
-    public static Map<Class<?>, Object > map = new HashMap<>();
+    private static Map<Class<?>, Object > map = new HashMap<>();
 
-    public static void initRequestMapping(){
-
+    public static Map<Class<?>, Object > initRequestMapping(){
         Reflections reflections = new Reflections("next.controller");
         putControllerWithAnnotationInMap(reflections);
-        ReflectionUtils.getAllMethods();
-
+        return map;
     }
 
     private static void putControllerWithAnnotationInMap(Reflections reflections) {
@@ -30,5 +28,9 @@ public class ControllerScanner {
                         e.printStackTrace();
                     }
                 });
+    }
+
+    public static Map<Class<?>, Object >getControllers() {
+        return map;
     }
 }
