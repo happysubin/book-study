@@ -82,7 +82,7 @@ cleaner과 finalizer는 두가지 정도 적절한 쓰임새가 있다.
 ## cleaner 사용법
 
 
-```
+```java
 public class Room implements AutoCloseable{
     
     private static final Cleaner cleaner = Cleaner.create();
