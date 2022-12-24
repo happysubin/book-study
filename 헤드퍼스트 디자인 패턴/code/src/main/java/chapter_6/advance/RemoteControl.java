@@ -1,4 +1,4 @@
-package headfirst.designpatterns.command.remote;
+package chapter_6.advance;
 
 //
 // This is the invoker

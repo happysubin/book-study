@@ -2,19 +2,19 @@ package chapter_6.ceiling;
 
 
 
-public class CeilingFanMediumCommand implements Command {
+public class CeilingFanLowCommand implements Command {
 
     private CeilingFan ceilingFan;
     private int prevSpeed; //상태지역 변수로 선풍기의 속도를 저장
 
-    public CeilingFanMediumCommand(CeilingFan ceilingFan) {
+    public CeilingFanLowCommand(CeilingFan ceilingFan) {
         this.ceilingFan = ceilingFan;
     }
 
     @Override
     public void execute() {
         prevSpeed = ceilingFan.getSpeed();
-        ceilingFan.medium();;
+        ceilingFan.low();;
     }
 
     @Override

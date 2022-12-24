@@ -1,13 +1,15 @@
-package chapter_6.advance;
+package chapter_6.simple;
+
 
 //
 // This is the invoker
 //
-public class RemoteControl {
-	Command[] onCommands;
-	Command[] offCommands;
- 
-	public RemoteControl() {
+public class RemoteControlWithUndo {
+	private Command[] onCommands;
+	private Command[] offCommands;
+	private Command undoCommand; //마지막으로 실행된 명령을 기록하는 인스턴스 변수 추가. 사용자가 undo를 누르면 기록해 뒀던 커맨드 객체 레퍼런스로 undo 메서드를 호출한다.
+
+	public RemoteControlWithUndo() {
 		onCommands = new Command[7];
 		offCommands = new Command[7];
  
@@ -16,6 +18,7 @@ public class RemoteControl {
 			onCommands[i] = noCommand;
 			offCommands[i] = noCommand;
 		}
+		undoCommand = noCommand;
 	}
   
 	public void setCommand(int slot, Command onCommand, Command offCommand) {
@@ -25,10 +28,16 @@ public class RemoteControl {
  
 	public void onButtonWasPushed(int slot) {
 		onCommands[slot].execute();
+		undoCommand = onCommands[slot];
 	}
  
 	public void offButtonWasPushed(int slot) {
 		offCommands[slot].execute();
+		undoCommand = offCommands[slot];
+	}
+
+	public void undoButtonWasPushed(){
+		undoCommand.undo();
 	}
   
 	public String toString() {

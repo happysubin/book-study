@@ -1,2 +1,8 @@
-package chapter_6.simple;public class NoCommand {
+package chapter_6.simple;
+
+
+
+public class NoCommand implements Command {
+    public void execute() { }
+    public void undo() {}
 }

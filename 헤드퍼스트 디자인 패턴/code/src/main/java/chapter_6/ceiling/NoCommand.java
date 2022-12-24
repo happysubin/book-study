@@ -1,4 +1,5 @@
-package chapter_6.simple;
+package chapter_6.ceiling;
+
 
 
 

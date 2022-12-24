@@ -1,4 +1,4 @@
-package chapter_6.simple;
+package chapter_6.ceiling;
 
 public interface Command {
     void execute();

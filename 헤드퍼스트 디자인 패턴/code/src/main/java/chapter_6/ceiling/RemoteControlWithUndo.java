@@ -1,4 +1,7 @@
-package chapter_6.simple;
+package chapter_6.ceiling;
+
+
+
 
 
 //
@@ -47,6 +50,8 @@ public class RemoteControlWithUndo {
 			stringBuff.append("[slot " + i + "] " + onCommands[i].getClass().getName()
 				+ "    " + offCommands[i].getClass().getName() + "\n");
 		}
+		stringBuff.append("[undo] " + undoCommand.getClass().getName() + "\n");
+
 		return stringBuff.toString();
 	}
 }
