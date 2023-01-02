@@ -2,8 +2,8 @@ package study.excode.account.application.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-import study.excode.account.application.service.port.in.SendMoneyCommand;
-import study.excode.account.application.service.port.in.SendMoneyUseCase;
+import study.excode.account.application.port.in.SendMoneyCommand;
+import study.excode.account.application.port.in.SendMoneyUseCase;
 
 @RequiredArgsConstructor
 @Transactional
