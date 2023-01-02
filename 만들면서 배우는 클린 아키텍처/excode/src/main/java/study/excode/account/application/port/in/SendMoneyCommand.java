@@ -1,11 +1,8 @@
-package study.excode.account.application.service.port.in;
+package study.excode.account.application.port.in;
 
 import com.sun.istack.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
 import lombok.Value;
-import org.springframework.transaction.annotation.Transactional;
-import study.excode.account.domain.Account;
 import study.excode.account.domain.Money;
 import study.excode.common.SelfValidating;
 
