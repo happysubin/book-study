@@ -11,7 +11,7 @@ import study.excode.account.domain.Money;
 
 import static study.excode.account.domain.Account.*;
 
-@WebAdapter
+
 @RestController
 @RequiredArgsConstructor
 class SendMoneyController {
