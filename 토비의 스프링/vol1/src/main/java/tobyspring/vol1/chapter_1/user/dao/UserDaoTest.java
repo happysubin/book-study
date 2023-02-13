@@ -2,14 +2,12 @@ package tobyspring.vol1.chapter_1.user.dao;
 
 import tobyspring.vol1.chapter_1.user.domain.User;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class NUserDao extends UserDao {
+public class UserDaoTest {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        UserDao userDao = new NUserDao();
+        UserDao userDao = new UserDao(new SimpleConnectionMaker());
         User user = new User();
         user.setId("subin");
         user.setName("안수빈");
@@ -24,12 +22,5 @@ public class NUserDao extends UserDao {
         System.out.println(user2.getPassword());
         System.out.println(user2.getId() + " 조회 성공!");
 
-    }
-
-    @Override
-    public Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection c = DriverManager.getConnection("jdbc:mysql://localhost:3306/toby_spring", "root", "1234");
-        return c;
     }
 }

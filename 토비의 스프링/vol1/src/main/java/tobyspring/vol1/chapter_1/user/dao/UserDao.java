@@ -5,10 +5,16 @@ import tobyspring.vol1.chapter_1.user.domain.User;
 import java.sql.*;
 
 
-public abstract class UserDao {
+public  class UserDao {
+
+    private ConnectionMaker connectionMaker;
+
+    public UserDao(ConnectionMaker connectionMaker) {
+        this.connectionMaker = connectionMaker;
+    }
 
     public void add(User user) throws ClassNotFoundException, SQLException {
-        Connection c = getConnection();
+        Connection c = connectionMaker.getConnection();
         PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?,?,?)");
 
         ps.setString(1, user.getId());
@@ -22,7 +28,7 @@ public abstract class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection c = getConnection();
+        Connection c = connectionMaker.getConnection();
         PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
         ps.setString(1, id);
 
@@ -39,10 +45,4 @@ public abstract class UserDao {
 
         return user;
     }
-
-    /**
-     * 관심사의 분리.
-     */
-
-    abstract Connection getConnection()throws ClassNotFoundException, SQLException;
 }
