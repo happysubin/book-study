@@ -1,5 +1,6 @@
 package tobyspring.vol1.user.dao;
 
+import org.hibernate.sql.Delete;
 import org.springframework.dao.EmptyResultDataAccessException;
 import tobyspring.vol1.user.domain.User;
 
@@ -58,12 +59,17 @@ public  class UserDao {
     }
 
     public void deleteAll() throws SQLException {
+        StatementStrategy st = new DeleteAllStatement(); //선정한 전략 클래스의 오브젝트 생성
+        jdbcContextWithStatementStrategy(st); //컨텍스트 호출. 전략 오브젝트 생성
+    }
+
+    public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException {
         Connection c = null;
         PreparedStatement ps = null;
 
         try{
             c = dataSource.getConnection();
-            ps = c.prepareStatement("delete from users");
+            ps = stmt.makePreparedStatement(c);
             ps.executeUpdate();
         }
         catch(SQLException e){
