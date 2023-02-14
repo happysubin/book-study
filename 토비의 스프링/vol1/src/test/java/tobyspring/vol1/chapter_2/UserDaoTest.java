@@ -5,11 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
-import tobyspring.vol1.chapter_1.user.dao.DaoFactory;
-import tobyspring.vol1.chapter_1.user.dao.UserDao;
-import tobyspring.vol1.chapter_1.user.domain.User;
+import tobyspring.vol1.user.dao.UserDao;
+import tobyspring.vol1.user.domain.User;
 
 import java.sql.SQLException;
 

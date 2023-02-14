@@ -1,4 +1,4 @@
-package tobyspring.vol1.chapter_1.user.domain;
+package tobyspring.vol1.user.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

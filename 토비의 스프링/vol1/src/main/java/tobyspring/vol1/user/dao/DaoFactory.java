@@ -1,10 +1,9 @@
-package tobyspring.vol1.chapter_1.user.dao;
+package tobyspring.vol1.user.dao;
 
 
 import com.zaxxer.hikari.util.DriverDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import javax.sql.DataSource;
 import java.util.Properties;
