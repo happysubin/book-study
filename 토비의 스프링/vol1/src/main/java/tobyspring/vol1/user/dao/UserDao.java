@@ -1,6 +1,5 @@
 package tobyspring.vol1.user.dao;
 
-import org.hibernate.sql.Delete;
 import org.springframework.dao.EmptyResultDataAccessException;
 import tobyspring.vol1.user.domain.User;
 
@@ -19,18 +18,19 @@ public  class UserDao {
         this.dataSource = dataSource;
     }
 
-    public void add(User user) throws ClassNotFoundException, SQLException {
-        Connection c = dataSource.getConnection();
-        PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?,?,?)");
+    public void add(User user) throws SQLException {
+        jdbcContextWithStatementStrategy(new StatementStrategy() {
+            @Override
+            public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
+                PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?,?,?)");
 
-        ps.setString(1, user.getId());
-        ps.setString(2, user.getName());
-        ps.setString(3, user.getPassword());
+                ps.setString(1, user.getId());
+                ps.setString(2, user.getName());
+                ps.setString(3, user.getPassword());
 
-        ps.executeUpdate();
-
-        ps.close();
-        c.close();
+                return ps;
+            }
+        });
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
@@ -58,9 +58,15 @@ public  class UserDao {
         return user;
     }
 
+    /**
+     * 컨텍스트는 PreparedStatement를 실행하는 JDBC의 작업 흐름.
+     * 전략은 PreparedStatement를 생성.
+     */
     public void deleteAll() throws SQLException {
-        StatementStrategy st = new DeleteAllStatement(); //선정한 전략 클래스의 오브젝트 생성
-        jdbcContextWithStatementStrategy(st); //컨텍스트 호출. 전략 오브젝트 생성
+        jdbcContextWithStatementStrategy(c -> {
+            PreparedStatement ps = c.prepareStatement("delete from users");
+            return ps;
+        });
     }
 
     public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException {
