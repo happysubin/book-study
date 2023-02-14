@@ -1,7 +1,6 @@
 package tobyspring.vol1.chapter_1.user.dao;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import tobyspring.vol1.chapter_1.user.domain.User;
 
 import java.sql.SQLException;
