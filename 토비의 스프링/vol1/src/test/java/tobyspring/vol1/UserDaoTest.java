@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
-import tobyspring.vol1.user.dao.UserDao;
+import tobyspring.vol1.user.dao.UserDaoJdbc;
 import tobyspring.vol1.user.domain.User;
 
 import java.sql.SQLException;
@@ -14,6 +14,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static tobyspring.vol1.user.domain.Level.*;
 
 @SpringBootTest
 public class UserDaoTest {
@@ -21,18 +22,18 @@ public class UserDaoTest {
     @Autowired
     ApplicationContext ac;
 
-    UserDao userDao;
+    UserDaoJdbc userDao;
     User user;
     User user1;
     User user2;
 
     @BeforeEach
     void beforeEach() throws SQLException {
-        userDao = ac.getBean(UserDao.class);
+        userDao = ac.getBean(UserDaoJdbc.class);
         userDao.deleteAll();
-        user = new User("id1", "subin", "1234");
-        user1 = new User("id2", "yebin", "2234");
-        user2 = new User("id3", "bean", "3234");
+        user = new User("id1", "subin", "1234", BASIC, 1, 0);
+        user1 = new User("id2", "yebin", "2234", SILVER, 55, 10);
+        user2 = new User("id3", "bean", "3234", GOLD, 100, 40);
 
         System.out.println("ac = " + ac); //동일한 주소가 출력됨.
         System.out.println("this = " + this); //다른 주소가 출력됨. 테스므 메서드 마다 테스트 클래스 인스턴스를 만들어 실행하기 때문이다.
@@ -107,10 +108,35 @@ public class UserDaoTest {
         checkSameUser(user2, users3.get(2));
     }
 
+    @Test
+    public void update(){
+        userDao.add(user1);
+        userDao.add(user2);
+
+        user1.setName("update");
+        user1.setPassword("1111");
+        user1.setLevel(GOLD);
+        user1.setLogin(1000);
+        user1.setRecommend(999);
+
+        userDao.update(user1);
+
+        User userUpdate = userDao.get(user1.getId());
+
+        checkSameUser(user1, userUpdate);
+
+        User user2same = userDao.get(user2.getId());
+
+        checkSameUser(user2, user2same);
+    }
+
     private void checkSameUser(User user1, User user) {
         assertThat(user1.getId()).isEqualTo(user.getId());
         assertThat(user1.getName()).isEqualTo(user.getName());
         assertThat(user1.getPassword()).isEqualTo(user.getPassword());
 
+        assertThat(user1.getLevel()).isEqualTo(user.getLevel());
+        assertThat(user1.getLogin()).isEqualTo(user.getLogin());
+        assertThat(user1.getRecommend()).isEqualTo(user.getRecommend());
     }
 }

@@ -1,55 +1,19 @@
 package tobyspring.vol1.user.dao;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import tobyspring.vol1.user.domain.User;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
-public  class UserDao {
+public interface UserDao {
+    void add(User user);
 
-    private JdbcTemplate jdbcTemplate;
+    User get(String id);
 
-    private RowMapper<User> userMapper = new RowMapper<User>() {
-        @Override
-        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            User user = new User();
-            user.setId(rs.getString("id"));
-            user.setName(rs.getString("name"));
-            user.setPassword(rs.getString("password"));
-            return user;
-        }
-    };
+    void deleteAll();
 
-    public UserDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    int getCount();
 
-    public void add(User user){
-        this.jdbcTemplate.update("insert into users(id, name, password) values(?,?,?)",
-                user.getId(),
-                user.getName(),
-                user.getPassword());
-    }
+    List<User> getAll();
 
-    public User get(String id){
-        return jdbcTemplate.queryForObject("select * from users where id = ?", userMapper, new Object[]{id}
-        );
-    }
-
-    public void deleteAll(){
-        jdbcTemplate.update("delete from users");
-    }
-
-
-    public int getCount(){
-        return jdbcTemplate.queryForObject("select count(*) from users", Integer.class);
-    }
-
-    public List<User> getAll() {
-        return jdbcTemplate.query("select * from users order by id", userMapper);
-
-    }
+    void update(User user);
 }
