@@ -1,4 +1,4 @@
-package tobyspring.vol1.chapter_2;
+package tobyspring.vol1;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,8 +10,10 @@ import tobyspring.vol1.user.dao.UserDao;
 import tobyspring.vol1.user.domain.User;
 
 import java.sql.SQLException;
+import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 public class UserDaoTest {
@@ -76,5 +78,39 @@ public class UserDaoTest {
         assertThatThrownBy(()->{
             userDao.get("hello");
         }).isInstanceOf(EmptyResultDataAccessException.class);
+    }
+
+    @Test
+    void getAll(){
+        userDao.deleteAll();
+
+        List<User> users0 = userDao.getAll();
+        assertThat(users0.size()).isEqualTo(0);
+
+        userDao.add(user);
+        List<User> users1 = userDao.getAll();
+        assertThat(users1.size()).isEqualTo(1);
+        checkSameUser(user, users1.get(0));
+
+        userDao.add(user1);
+        List<User> users2 = userDao.getAll();
+        assertThat(users2.size()).isEqualTo(2);
+        checkSameUser(user, users2.get(0));
+        checkSameUser(user1, users2.get(1));
+
+
+        userDao.add(user2);
+        List<User> users3 = userDao.getAll();
+        assertThat(users3.size()).isEqualTo(3);
+        checkSameUser(user, users3.get(0));
+        checkSameUser(user1, users3.get(1));
+        checkSameUser(user2, users3.get(2));
+    }
+
+    private void checkSameUser(User user1, User user) {
+        assertThat(user1.getId()).isEqualTo(user.getId());
+        assertThat(user1.getName()).isEqualTo(user.getName());
+        assertThat(user1.getPassword()).isEqualTo(user.getPassword());
+
     }
 }

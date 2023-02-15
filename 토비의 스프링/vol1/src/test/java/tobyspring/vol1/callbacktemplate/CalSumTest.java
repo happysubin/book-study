@@ -32,5 +32,4 @@ public class CalSumTest {
     void concatenate() throws IOException {
         assertThat(calculator.concatenate(filePath)).isEqualTo("1234");
     }
-
 }

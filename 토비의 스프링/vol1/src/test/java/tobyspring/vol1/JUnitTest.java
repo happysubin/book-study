@@ -1,8 +1,8 @@
-package tobyspring.vol1.chapter_2;
+package tobyspring.vol1;
 
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class JUnitTest {
 

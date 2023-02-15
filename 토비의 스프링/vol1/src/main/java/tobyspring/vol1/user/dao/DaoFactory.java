@@ -4,6 +4,7 @@ package tobyspring.vol1.user.dao;
 import com.zaxxer.hikari.util.DriverDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -16,13 +17,13 @@ public class DaoFactory {
      */
 
     @Bean
-    public UserDao userDao(DataSource dataSource){
-        return new UserDao(dataSource);
+    public UserDao userDao(){
+        return new UserDao(new JdbcTemplate(dataSource()));
     }
 
-    @Bean
-    public DataSource dataSource() throws ClassNotFoundException {
 
+    @Bean
+    public DataSource dataSource(){
         return new DriverDataSource(
                 "jdbc:mysql://localhost:3306/toby_spring",
                 "com.mysql.cj.jdbc.Driver",
@@ -30,10 +31,5 @@ public class DaoFactory {
                 "root",
                 "1234"
         );
-//        dataSource.setDriverClass(Driver);
-//        dataSource.setUrl("jdbc:mysql://localhost:3306/toby_spring");
-//        dataSource.setUrl("root");
-//        dataSource.setPassword("1234");
-//        return dataSource;
     }
 }
