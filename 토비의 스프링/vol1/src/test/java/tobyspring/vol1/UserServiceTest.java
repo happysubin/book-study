@@ -5,9 +5,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import tobyspring.vol1.user.dao.UserDao;
 import tobyspring.vol1.user.domain.Level;
 import tobyspring.vol1.user.domain.User;
+import tobyspring.vol1.user.service.UserLevelUpgradePolicy;
+import tobyspring.vol1.user.service.UserLevelUpgradePolicyImpl;
 import tobyspring.vol1.user.service.UserService;
 
 import java.util.ArrayList;
@@ -30,6 +35,9 @@ public class UserServiceTest {
 
     @Autowired
     UserDao userDao;
+
+    @Autowired
+    PlatformTransactionManager transactionManager;
 
     @BeforeEach
     void beforeEach(){
@@ -85,6 +93,54 @@ public class UserServiceTest {
         }
         else{
             assertThat(userUpdate.getLevel()).isSameAs(user.getLevel());
+        }
+    }
+
+    @Test
+    void upgradeAllOrNothing(){
+        TestUserService testUserService = new TestUserService(userDao,users.get(3).getId(), transactionManager);
+        userDao.deleteAll();
+        for (User user : users) userDao.add(user);
+
+        assertThatThrownBy(()->{
+            testUserService.upgradeLevels();
+        }).hasMessage("테스트 예외");
+
+        checkLevel(users.get(1), false);
+    }
+
+    static class TestUserService extends UserLevelUpgradePolicyImpl {
+
+        private String id;
+        private PlatformTransactionManager transactionManager;
+
+        public TestUserService(UserDao userDao, String id, PlatformTransactionManager platformTransactionManager) {
+            super(userDao);
+            this.id = id;
+            this.transactionManager = platformTransactionManager;
+        }
+
+        @Override
+        public void upgradeLevel(User user) {
+            if(user.getId().equals(this.id)) throw new RuntimeException("테스트 예외");
+            super.upgradeLevel(user);
+        }
+
+        public void upgradeLevels(){
+            TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+            try{
+                List<User> users = userDao.getAll();
+                for (User user : users) {
+                    if(canUpgradeLevel(user)){
+                        upgradeLevel(user);
+                    }
+                }
+                transactionManager.commit(status);
+            }
+            catch(Exception e){
+                transactionManager.rollback(status);
+                throw e;
+            }
         }
     }
 }

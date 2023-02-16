@@ -13,7 +13,7 @@ public class UserLevelUpgradePolicyImpl implements UserLevelUpgradePolicy{
     public static final int MIN_LOG_COUNT_FOR_SILVER = 50;
     public static final int MIN_RECOMMEND_FOR_GOLD = 30;
 
-    private final UserDao userDao;
+    protected final UserDao userDao;
 
     public UserLevelUpgradePolicyImpl(UserDao userDao) {
         this.userDao = userDao;
