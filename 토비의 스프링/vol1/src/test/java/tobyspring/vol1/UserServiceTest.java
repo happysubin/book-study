@@ -1,21 +1,22 @@
 package tobyspring.vol1;
 
-import org.assertj.core.api.Assertions;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import tobyspring.vol1.user.dao.UserDao;
-import tobyspring.vol1.user.domain.Level;
-import tobyspring.vol1.user.domain.User;
-import tobyspring.vol1.user.service.UserLevelUpgradePolicy;
-import tobyspring.vol1.user.service.UserLevelUpgradePolicyImpl;
-import tobyspring.vol1.user.service.UserService;
 
-import java.util.ArrayList;
+import tobyspring.vol1.user.domain.User;
+import tobyspring.vol1.user.service.*;
+
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,7 +24,7 @@ import static org.assertj.core.api.Assertions.*;
 import static tobyspring.vol1.user.domain.Level.*;
 import static tobyspring.vol1.user.service.UserLevelUpgradePolicyImpl.MIN_LOG_COUNT_FOR_SILVER;
 import static tobyspring.vol1.user.service.UserLevelUpgradePolicyImpl.MIN_RECOMMEND_FOR_GOLD;
-import static tobyspring.vol1.user.service.UserService.*;
+
 
 @SpringBootTest
 public class UserServiceTest {
@@ -72,18 +73,24 @@ public class UserServiceTest {
         assertThat(userWithoutLevelRead.getLevel()).isSameAs(BASIC);
     }
 
+    @DirtiesContext
     @Test
     void upgradeLevels() throws Exception {
         for (User user : users) userDao.add(user);
 
+        MockMailSender mockMailSender = new MockMailSender();
+        userService.setMailSender(mockMailSender);
         userService.upgradeLevels();
-
         checkLevel(users.get(0), false);
         checkLevel(users.get(1), true);
         checkLevel(users.get(2), false);
         checkLevel(users.get(3), true);
         checkLevel(users.get(4), false);
 
+        List<String> requests = mockMailSender.getRequests();
+        assertThat(requests.size()).isEqualTo(2);
+        assertThat(requests.get(0)).isEqualTo(users.get(1).getEmail());
+        assertThat(requests.get(1)).isEqualTo(users.get(3).getEmail());
     }
 
     private void checkLevel(User user, boolean upgraded) {
@@ -102,9 +109,7 @@ public class UserServiceTest {
         userDao.deleteAll();
         for (User user : users) userDao.add(user);
 
-        assertThatThrownBy(()->{
-            testUserService.upgradeLevels();
-        }).hasMessage("테스트 예외");
+        assertThatThrownBy(testUserService::upgradeLevels).hasMessage("테스트 예외");
 
         checkLevel(users.get(1), false);
     }
@@ -115,7 +120,7 @@ public class UserServiceTest {
         private PlatformTransactionManager transactionManager;
 
         public TestUserService(UserDao userDao, String id, PlatformTransactionManager platformTransactionManager) {
-            super(userDao);
+            super(userDao, new DummyMailSender());
             this.id = id;
             this.transactionManager = platformTransactionManager;
         }

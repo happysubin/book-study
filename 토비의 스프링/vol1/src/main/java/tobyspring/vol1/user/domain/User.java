@@ -15,6 +15,7 @@ public class User {
     private Level level;
     private int login;
     private int recommend;
+    private String email;
 
     public User(String id, String name, String password, Level level, int login, int recommend) {
         this.id = id;

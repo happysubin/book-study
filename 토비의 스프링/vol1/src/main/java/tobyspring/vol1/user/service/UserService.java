@@ -1,17 +1,13 @@
 package tobyspring.vol1.user.service;
 
-import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.mail.MailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 import tobyspring.vol1.user.dao.UserDao;
 import tobyspring.vol1.user.domain.User;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 import static tobyspring.vol1.user.domain.Level.*;
@@ -49,5 +45,15 @@ public class UserService {
     public void add(User user) {
         if(user.getLevel() == null) user.setLevel(BASIC);
         userDao.add(user);
+    }
+
+    public void setMailSender(MailSender mailSender){
+        UserLevelUpgradePolicyImpl userLevelUpgradePolicy = (UserLevelUpgradePolicyImpl) this.userLevelUpgradePolicy;
+        userLevelUpgradePolicy.setMailSender(mailSender );
+    }
+
+    public MailSender getMailSender(){
+        UserLevelUpgradePolicyImpl userLevelUpgradePolicy = (UserLevelUpgradePolicyImpl) this.userLevelUpgradePolicy;
+        return userLevelUpgradePolicy.getMailSender();
     }
 }
