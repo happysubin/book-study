@@ -65,7 +65,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void upgradeLevels(){
+    void upgradeLevels() throws Exception {
         for (User user : users) userDao.add(user);
 
         userService.upgradeLevels();
