@@ -15,6 +15,9 @@ import tobyspring.vol1.user.dao.UserDao;
 
 import tobyspring.vol1.user.domain.User;
 import tobyspring.vol1.user.service.*;
+import tobyspring.vol1.user.service.mailSender.DummyMailSender;
+import tobyspring.vol1.user.service.mailSender.MockMailSender;
+import tobyspring.vol1.user.service.mailSender.UserService;
 
 
 import java.util.Arrays;
@@ -32,7 +35,7 @@ public class UserServiceTest {
     List<User> users;
 
     @Autowired
-    UserService userService;
+    UserServiceImpl userService;
 
     @Autowired
     UserDao userDao;
@@ -106,10 +109,14 @@ public class UserServiceTest {
     @Test
     void upgradeAllOrNothing(){
         TestUserService testUserService = new TestUserService(userDao,users.get(3).getId(), transactionManager);
+        UserService userService = new UserServiceImpl(userDao, testUserService);
+
         userDao.deleteAll();
         for (User user : users) userDao.add(user);
 
-        assertThatThrownBy(testUserService::upgradeLevels).hasMessage("테스트 예외");
+        UserServiceTx userServiceTx = new UserServiceTx(userService, transactionManager);
+
+        assertThatThrownBy(userServiceTx::upgradeLevels).hasMessage("테스트 예외");
 
         checkLevel(users.get(1), false);
     }

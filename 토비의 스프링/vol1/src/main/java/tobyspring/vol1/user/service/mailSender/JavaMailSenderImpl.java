@@ -1,4 +1,4 @@
-package tobyspring.vol1.user.service;
+package tobyspring.vol1.user.service.mailSender;
 
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
