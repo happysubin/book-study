@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import tobyspring.vol1.user.dao.UserDao;
 import tobyspring.vol1.user.domain.User;
-import tobyspring.vol1.user.service.mailSender.UserService;
 
 import java.util.List;
 

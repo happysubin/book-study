@@ -4,7 +4,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import tobyspring.vol1.user.domain.User;
-import tobyspring.vol1.user.service.mailSender.UserService;
 
 public class UserServiceTx implements UserService {
 

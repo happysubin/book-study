@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
+import tobyspring.vol1.user.service.TxProxyFactoryBean;
+import tobyspring.vol1.user.service.UserService;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -38,4 +40,12 @@ public class DaoFactory {
     public PlatformTransactionManager transactionManager(){
         return new DataSourceTransactionManager(dataSource());
     }
+
+    @Bean
+    public TxProxyFactoryBean txProxyFactoryBean(
+            PlatformTransactionManager platformTransactionManager, UserService userService
+    ){
+        return new TxProxyFactoryBean(userService, platformTransactionManager, "upgradeLevels", UserService.class);
+    }
+
 }

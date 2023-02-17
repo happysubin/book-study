@@ -1,4 +1,4 @@
-package tobyspring.vol1.user.service.mailSender;
+package tobyspring.vol1.user.service;
 
 import tobyspring.vol1.user.domain.User;
 

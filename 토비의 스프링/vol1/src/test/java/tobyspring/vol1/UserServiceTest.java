@@ -5,10 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.annotation.DirtiesContext;
@@ -21,7 +21,7 @@ import tobyspring.vol1.user.domain.User;
 import tobyspring.vol1.user.service.*;
 import tobyspring.vol1.user.service.mailSender.DummyMailSender;
 import tobyspring.vol1.user.service.mailSender.MockMailSender;
-import tobyspring.vol1.user.service.mailSender.UserService;
+import tobyspring.vol1.user.service.UserService;
 
 
 import java.util.Arrays;
@@ -47,6 +47,9 @@ public class UserServiceTest {
 
     @Autowired
     PlatformTransactionManager transactionManager;
+
+    @Autowired
+    ApplicationContext ac;
 
     @BeforeEach
     void beforeEach(){
@@ -127,7 +130,7 @@ public class UserServiceTest {
          */
         verify(mockUserDao, times(2)).update(any(User.class));
         verify(mockUserDao, times(2)).update(any(User.class));
-        verify(mockUserDao).update(users.get(1));
+        verify(mockUserDao).update(users.get(1)); //users.get(1)을 파라미터로 update가 호출된적이 있는지를 확인함.
         assertThat(users.get(1).getLevel()).isSameAs(SILVER);
         verify(mockUserDao).update(users.get(3));
         assertThat(users.get(3).getLevel()).isSameAs(GOLD);
@@ -149,6 +152,22 @@ public class UserServiceTest {
         for (User user : users) userDao.add(user);
 
         UserServiceTx userServiceTx = new UserServiceTx(userService, transactionManager);
+
+        assertThatThrownBy(userServiceTx::upgradeLevels).hasMessage("테스트 예외");
+
+        checkLevel(users.get(1), false);
+    }
+
+    @DirtiesContext
+    @Test
+    void upgradeAllOrNothingUsingDynamicProxy() throws Exception {
+        TestUserService testUserService = new TestUserService(userDao,users.get(3).getId(), transactionManager);
+        TxProxyFactoryBean factoryBean = ac.getBean(TxProxyFactoryBean.class);
+        factoryBean.setTarget(new UserServiceImpl(userDao, testUserService));
+        UserService userServiceTx = (UserService)factoryBean.getObject();
+
+        userDao.deleteAll();
+        for (User user : users) userDao.add(user);
 
         assertThatThrownBy(userServiceTx::upgradeLevels).hasMessage("테스트 예외");
 
