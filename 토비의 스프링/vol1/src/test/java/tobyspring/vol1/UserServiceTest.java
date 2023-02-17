@@ -4,9 +4,13 @@ package tobyspring.vol1;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -24,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 import static tobyspring.vol1.user.domain.Level.*;
 import static tobyspring.vol1.user.service.UserLevelUpgradePolicyImpl.MIN_LOG_COUNT_FOR_SILVER;
 import static tobyspring.vol1.user.service.UserLevelUpgradePolicyImpl.MIN_RECOMMEND_FOR_GOLD;
@@ -104,6 +109,35 @@ public class UserServiceTest {
         else{
             assertThat(userUpdate.getLevel()).isSameAs(user.getLevel());
         }
+    }
+
+    @Test
+    void mockUpgradeLevels() throws Exception {
+        UserDao mockUserDao = mock(UserDao.class);
+        MailSender mockMailSender = mock(MailSender.class);
+        UserLevelUpgradePolicy mockUserLevelUpgradePolicy = mock(UserLevelUpgradePolicy.class);
+
+        UserServiceImpl userService = new UserServiceImpl(mockUserDao, new UserLevelUpgradePolicyImpl(mockUserDao, mockMailSender));
+
+        when(mockUserDao.getAll()).thenReturn(this.users);
+        userService.upgradeLevels();
+
+        /**
+         * 목 오브젝트의 기능을 통해 어떤 메서드가 몇 번 호출됐는지, 파라미터가 무엇인지 확인할 수 있다.
+         */
+        verify(mockUserDao, times(2)).update(any(User.class));
+        verify(mockUserDao, times(2)).update(any(User.class));
+        verify(mockUserDao).update(users.get(1));
+        assertThat(users.get(1).getLevel()).isSameAs(SILVER);
+        verify(mockUserDao).update(users.get(3));
+        assertThat(users.get(3).getLevel()).isSameAs(GOLD);
+
+        ArgumentCaptor<SimpleMailMessage> mailMessageArg = ArgumentCaptor.forClass(SimpleMailMessage.class);
+        verify(mockMailSender, times(2)).send(mailMessageArg.capture());
+        List<SimpleMailMessage> mailMessages = mailMessageArg.getAllValues();
+        assertThat(mailMessages.get(0).getTo()[0]).isEqualTo(users.get(1).getEmail());
+        assertThat(mailMessages.get(1).getTo()[0]).isEqualTo(users.get(3).getEmail());
+
     }
 
     @Test
