@@ -9,7 +9,7 @@ import tobyspring.vol1.user.dao.UserDao;
 import tobyspring.vol1.user.domain.Level;
 import tobyspring.vol1.user.domain.User;
 
-@Component
+
 @Setter
 @Getter
 public class UserLevelUpgradePolicyImpl implements UserLevelUpgradePolicy{

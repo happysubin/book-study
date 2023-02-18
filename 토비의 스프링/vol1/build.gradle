@@ -29,6 +29,8 @@ dependencies {
 
 	implementation 'com.sun.mail:javax.mail:1.6.2'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
+
 }
 
 tasks.named('test') {

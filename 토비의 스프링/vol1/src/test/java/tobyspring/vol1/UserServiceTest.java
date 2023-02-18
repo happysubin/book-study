@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.mockito.ArgumentCaptor;
+import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -118,8 +119,6 @@ public class UserServiceTest {
     void mockUpgradeLevels() throws Exception {
         UserDao mockUserDao = mock(UserDao.class);
         MailSender mockMailSender = mock(MailSender.class);
-        UserLevelUpgradePolicy mockUserLevelUpgradePolicy = mock(UserLevelUpgradePolicy.class);
-
         UserServiceImpl userService = new UserServiceImpl(mockUserDao, new UserLevelUpgradePolicyImpl(mockUserDao, mockMailSender));
 
         when(mockUserDao.getAll()).thenReturn(this.users);
@@ -140,7 +139,6 @@ public class UserServiceTest {
         List<SimpleMailMessage> mailMessages = mailMessageArg.getAllValues();
         assertThat(mailMessages.get(0).getTo()[0]).isEqualTo(users.get(1).getEmail());
         assertThat(mailMessages.get(1).getTo()[0]).isEqualTo(users.get(3).getEmail());
-
     }
 
     @Test
@@ -162,9 +160,25 @@ public class UserServiceTest {
     @Test
     void upgradeAllOrNothingUsingDynamicProxy() throws Exception {
         TestUserService testUserService = new TestUserService(userDao,users.get(3).getId(), transactionManager);
-        TxProxyFactoryBean factoryBean = ac.getBean(TxProxyFactoryBean.class);
+        TxProxyFactoryBean factoryBean = ac.getBean("&txProxyFactoryBean", TxProxyFactoryBean.class);
         factoryBean.setTarget(new UserServiceImpl(userDao, testUserService));
         UserService userServiceTx = (UserService)factoryBean.getObject();
+
+        userDao.deleteAll();
+        for (User user : users) userDao.add(user);
+
+        assertThatThrownBy(userServiceTx::upgradeLevels).hasMessage("테스트 예외");
+
+        checkLevel(users.get(1), false);
+    }
+
+    @DirtiesContext
+    @Test
+    void upgradeAllOrNothingUsingProxyBeanFactory() throws Exception {
+        TestUserService testUserService = new TestUserService(userDao,users.get(3).getId(), transactionManager);
+        ProxyFactoryBean pf = ac.getBean(ProxyFactoryBean.class);
+        pf.setTarget(new UserServiceImpl(userDao, testUserService));
+        UserService userServiceTx = (UserService)pf.getObject();
 
         userDao.deleteAll();
         for (User user : users) userDao.add(user);

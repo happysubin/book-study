@@ -2,13 +2,19 @@ package tobyspring.vol1.user.dao;
 
 
 import com.zaxxer.hikari.util.DriverDataSource;
+import net.bytebuddy.asm.Advice;
+import org.springframework.aop.Advisor;
+import org.springframework.aop.framework.ProxyFactory;
+import org.springframework.aop.framework.ProxyFactoryBean;
+import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.aop.support.NameMatchMethodPointcut;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
-import tobyspring.vol1.user.service.TxProxyFactoryBean;
-import tobyspring.vol1.user.service.UserService;
+import tobyspring.vol1.user.service.*;
+import tobyspring.vol1.user.service.mailSender.MockMailSender;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -48,4 +54,35 @@ public class DaoFactory {
         return new TxProxyFactoryBean(userService, platformTransactionManager, "upgradeLevels", UserService.class);
     }
 
+    @Bean
+    public TransactionAdvice transactionAdvice(PlatformTransactionManager transactionManager){
+        return new TransactionAdvice(transactionManager);
+    }
+
+    @Bean
+    public NameMatchMethodPointcut nameMatchMethodPointcut(){
+        NameMatchMethodPointcut pointcut = new NameMatchMethodPointcut();
+        pointcut.setMappedName("upgrade*");
+        return pointcut;
+    }
+
+
+    @Bean
+    public UserLevelUpgradePolicy userLevelUpgradePolicy(){
+        return new UserLevelUpgradePolicyImpl(userDao(), new MockMailSender());
+    }
+
+
+    @Bean
+    public UserService userService(){
+        return new UserServiceImpl(userDao(), userLevelUpgradePolicy());
+    }
+
+    @Bean
+    public ProxyFactoryBean proxyFactoryBean(){
+        ProxyFactoryBean proxyFactoryBean = new ProxyFactoryBean();
+        proxyFactoryBean.setTarget(userService());
+        proxyFactoryBean.addAdvisor(new DefaultPointcutAdvisor(nameMatchMethodPointcut(), transactionAdvice(transactionManager())));
+        return proxyFactoryBean;
+    }
 }
