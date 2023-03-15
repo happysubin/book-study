@@ -19,4 +19,3 @@
 * ClientRegistrationRepository 객체는 등록 ID로 ClientRegistration을 찾는다.
 * 인증 필터는 ClientRegistrationRepository 객체에서 권한 부여 서버 클라이언트 등록에 대한 세부 정보를 얻는다.
 * ClientRegistrationRepository 객체에는 하나 이상의 ClientRegistration 객체가 있다.
-* 
