@@ -23,25 +23,25 @@ public class ProjectConfig {
      * 커맨드 라인 옵션 인수를 이용해 실습을 진행함.
      */
 
-    @Value("${client_id}")
-    private String clientId;
-
-    @Value("${secret}")
-    private String secretKey;
-
-
-    private ClientRegistration clientRegistration(){
-        return CommonOAuth2Provider.GITHUB
-                .getBuilder("github")
-                .clientId(clientId)
-                .clientSecret(secretKey)
-                .build();
-    }
-
-    @Bean
-    ClientRegistrationRepository clientRegistrationRepository(){
-        return new InMemoryClientRegistrationRepository(clientRegistration());
-    }
+//    @Value("${client_id}")
+//    private String clientId;
+//
+//    @Value("${secret}")
+//    private String secretKey;
+//
+//
+//    private ClientRegistration clientRegistration(){
+//        return CommonOAuth2Provider.GITHUB
+//                .getBuilder("github")
+//                .clientId(clientId)
+//                .clientSecret(secretKey)
+//                .build();
+//    }
+//
+//    @Bean
+//    ClientRegistrationRepository clientRegistrationRepository(){
+//        return new InMemoryClientRegistrationRepository(clientRegistration());
+//    }
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -49,9 +49,11 @@ public class ProjectConfig {
         /**
          * oauth2Login 메서드를 사용해 새로운 인증 필터를 필터체인에 추가한다.
          */
-        http.oauth2Login(httpSecurityOAuth2LoginConfigurer -> {
-            httpSecurityOAuth2LoginConfigurer.clientRegistrationRepository(clientRegistrationRepository());
-        });
+//        http.oauth2Login(httpSecurityOAuth2LoginConfigurer -> {
+//            httpSecurityOAuth2LoginConfigurer.clientRegistrationRepository(clientRegistrationRepository());
+//        });
+
+        http.oauth2Login();
 
         http.authorizeRequests()
                 .anyRequest()
