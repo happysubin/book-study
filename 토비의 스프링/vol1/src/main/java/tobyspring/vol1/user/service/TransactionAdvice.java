@@ -29,6 +29,8 @@ public class TransactionAdvice implements MethodInterceptor {
         catch(RuntimeException e){
             transactionManager.rollback(status);
             throw e;
+
+
         }
     }
 }
