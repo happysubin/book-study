@@ -56,7 +56,9 @@ public class ProjectConfig {
 
         http.authorizeRequests(authRequest ->
                 authRequest
-                        .anyRequest().authenticated());
+                        .anyRequest()
+                        .authenticated()
+        );
 
 
         http.oauth2Login(Customizer.withDefaults());
