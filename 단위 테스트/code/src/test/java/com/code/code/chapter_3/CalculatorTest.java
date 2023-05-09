@@ -1,9 +1,7 @@
-package com.code.code;
+package com.code.code.chapter_3;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class CalculatorTest {
 

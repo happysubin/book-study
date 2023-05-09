@@ -1,4 +1,4 @@
-package com.code.code;
+package com.code.code.chapter_3;
 
 public class Calculator {
 
