@@ -10,6 +10,7 @@ CREATE TABLE 사원 (
 
 CREATE TABLE 부서 (
     부서번호 INT NOT NULL AUTO_INCREMENT,
+    부서명 VARCHAR(50),
     비고 VARCHAR(50),
     PRIMARY KEY(부서번호)
 );
