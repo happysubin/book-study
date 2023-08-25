@@ -18,21 +18,24 @@ CREATE TABLE 부서사원 (
     사원번호 INT NOT NULL,
     부서번호 INT NOT NULL,
     시작일자 DATE,
-    종료일자 DATE
+    종료일자 DATE,
+    PRIMARY KEY(사원번호, 부서번호)
 );
 
 CREATE TABLE 부서관리자 (
     사원번호 INT NOT NULL,
     부서번호 INT NOT NULL,
     시작일자 DATE,
-    종료일자 DATE
+    종료일자 DATE,
+    PRIMARY KEY(사원번호, 부서번호)
 );
 
 CREATE TABLE 직급 (
     사원번호 INT NOT NULL,
     직급명 VARCHAR (50),
     시작일자 DATE,
-    종료일자 DATE
+    종료일자 DATE,
+    PRIMARY KEY(사원번호, 직급명, 시작일자)
 );
 
 CREATE TABLE 급여 (
@@ -40,7 +43,8 @@ CREATE TABLE 급여 (
     연봉 INT NOT NULL,
     시작일자 DATE,
     종료일자 DATE,
-    사용여부 VARCHAR (50)
+    사용여부 VARCHAR (50),
+    PRIMARY KEY(사원번호, 시작일자)
 );
 
 CREATE TABLE 사원출입기록 (
@@ -50,5 +54,5 @@ CREATE TABLE 사원출입기록 (
     입출입구분 VARCHAR (50),
     출입문 VARCHAR (50),
     지역 VARCHAR (50),
-    PRIMARY KEY(순번)
+    PRIMARY KEY(순번, 사원번호)
 );

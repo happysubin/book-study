@@ -12,7 +12,7 @@ public class ControllerScanner {
     
     private static Map<Class<?>, Object > map = new HashMap<>();
 
-    public static Map<Class<?>, Object > initRequestMapping(String basePackage){
+    public static Map<Class<?>, Object > initRequestMapping(String basePackage) {
         Reflections reflections = new Reflections(basePackage);
         putControllerWithAnnotationInMap(reflections);
         return map;
