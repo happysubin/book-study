@@ -9,7 +9,7 @@ import java.util.List;
 
 public class BankStatementAnalyzer {
 
-    private static final String RESOURCES = "src/resources/transactions.csv";
+    private static final String RESOURCES = "src/main/resources/transactions.csv";
 
     public void analyze(BankStatementParser bankStatementParser) throws IOException {
         final Path path = Paths.get(RESOURCES);

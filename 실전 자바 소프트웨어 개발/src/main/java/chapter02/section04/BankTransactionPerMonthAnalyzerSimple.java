@@ -21,10 +21,10 @@ import java.util.List;
 
 public class BankTransactionPerMonthAnalyzerSimple {
 
-    private static final String Resources = "src/resources/transactions.csv";
+    private static final String RESOURCES = "src/main/resources/transactions.csv";
 
     public static void main(String[] args) throws IOException {
-        final Path path = Paths.get(Resources);
+        final Path path = Paths.get(RESOURCES);
         final List<String> lines = Files.readAllLines(path);
 
         final DateTimeFormatter Date_PATTERN = DateTimeFormatter.ofPattern("dd-MM-yyyy");

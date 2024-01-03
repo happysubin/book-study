@@ -1,7 +1,6 @@
 package chapter02.section06;
 
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.List;
 
 public class BankStatementProcessor {

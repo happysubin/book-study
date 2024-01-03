@@ -1,6 +1,5 @@
 package chapter02.section06;
 
-import java.sql.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

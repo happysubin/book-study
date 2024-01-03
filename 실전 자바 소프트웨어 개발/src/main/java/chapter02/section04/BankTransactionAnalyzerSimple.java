@@ -12,10 +12,10 @@ import java.util.List;
 
 public class BankTransactionAnalyzerSimple {
 
-    private static final String Resources = "src/resources/transactions.csv";
+    private static final String RESOURCES = "src/main/resources/transactions.csv";
 
     public static void main(String[] args) throws IOException {
-        final Path path = Paths.get(Resources);
+        final Path path = Paths.get(RESOURCES);
         final List<String> lines = Files.readAllLines(path);
 
         double total = 0d;
