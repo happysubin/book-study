@@ -5,3 +5,4 @@
 **/WEB-INF/**
 **/.gradle/**
 **/build/**
+**/lib
