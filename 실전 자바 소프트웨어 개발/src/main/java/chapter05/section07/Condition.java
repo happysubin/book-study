@@ -1,4 +1,10 @@
-package chapter05;
+package chapter05.section07;
 
-public class Condition {
+
+import chapter05.Facts;
+
+@FunctionalInterface
+public interface Condition {
+
+    boolean evaluate(Facts facts);
 }

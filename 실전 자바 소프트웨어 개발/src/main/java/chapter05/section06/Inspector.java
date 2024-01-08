@@ -1,6 +1,8 @@
-package chapter05;
+package chapter05.section06;
 
-import chapter04.ReportImporter;
+import chapter05.Facts;
+import chapter05.Report;
+import chapter05.section06.ConditionalAction;
 
 import java.util.ArrayList;
 import java.util.Arrays;

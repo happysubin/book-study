@@ -1,4 +1,6 @@
-package chapter05;
+package chapter05.section06;
+
+import chapter05.Facts;
 
 public interface ConditionalAction {
 

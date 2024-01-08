@@ -2,22 +2,19 @@ package chapter05.section07;
 
 import chapter05.Action;
 
-public class RuleBuilderV1 {
+public class RuleBuilderV2 {
 
     private Condition condition;
-    private Action action;
 
-    public RuleBuilderV1 when(final Condition condition) {
+    private RuleBuilderV2(Condition condition) {
         this.condition = condition;
-        return this;
     }
 
-    public RuleBuilderV1 then(final Action action) {
-        this.action = action;
-        return this;
+    public static RuleBuilderV2 when(final Condition condition) {
+        return new RuleBuilderV2(condition);
     }
 
-    public Rule createRule() {
+    public Rule then(Action action) {
         return new DefaultRule(condition, action);
     }
 }
