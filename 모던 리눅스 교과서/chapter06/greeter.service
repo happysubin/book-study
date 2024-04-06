@@ -1,0 +1,6 @@
+[Unit]
+Description=My Greeting Service
+
+[Service]
+Type=oneshot
+ExecStart=/home/mh9/greeter.sh

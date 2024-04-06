@@ -1,0 +1,9 @@
+[Unit]
+Description=Runs Greeting service at the top of the hour
+
+[Timer]
+OnCalendar=hourly
+
+
+# sudo systemctl status greeter.time
+# journalctl -f -u greeter.service
