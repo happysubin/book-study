@@ -1,5 +1,4 @@
-package book.bestpractice.part01.onetomanybi
-
+package book.bestpractice.part01.chapter01
 
 import jakarta.persistence.*
 
@@ -29,9 +28,11 @@ class Author (
     }
 
     fun removeBooks() {
-        for (book in books) {
+        val iterator = books.iterator()
+        while(iterator.hasNext()) {
+            val book = iterator.next()
             book.setAuthor(null)
-            books.remove(book)
+            iterator.remove()
         }
     }
 

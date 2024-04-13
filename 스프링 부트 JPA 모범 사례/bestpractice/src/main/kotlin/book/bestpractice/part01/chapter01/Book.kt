@@ -1,4 +1,4 @@
-package book.bestpractice.part01.onetomanybi
+package book.bestpractice.part01.chapter01
 
 import jakarta.persistence.*
 
@@ -13,7 +13,7 @@ class Book(
 
     @JoinColumn(name = "author_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private var author: Author?
+    private var author: Author? = null
 ) {
     fun setAuthor(author: Author?) {
         this.author = author
