@@ -67,6 +67,9 @@ class AppService(
         authorRepository.deleteByIdentifier(id)
     }
 
+    /**
+     * 삭제해야할 저자와 도서가 용속성 컨텍스트에 로드되지 않은 경우 삭제
+     */
     @Transactional
     fun deleteViaBulk(id: List<Long>) {
         bookRepository.deleteBulkByAuthorIdentifier(id)

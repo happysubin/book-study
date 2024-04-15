@@ -3,6 +3,12 @@ package book.bestpractice.part01.chapter01
 import jakarta.persistence.*
 
 @Entity
+@NamedEntityGraph(
+    name = "author-books-graph",
+    attributeNodes = [
+        NamedAttributeNode("books")
+    ]
+)
 class Author (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
