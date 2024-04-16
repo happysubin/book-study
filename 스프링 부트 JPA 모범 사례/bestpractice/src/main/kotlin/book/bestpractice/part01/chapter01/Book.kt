@@ -1,5 +1,6 @@
 package book.bestpractice.part01.chapter01
 
+import book.bestpractice.part01.chapter08.Publisher
 import jakarta.persistence.*
 
 @Entity
@@ -13,7 +14,12 @@ class Book(
 
     @JoinColumn(name = "author_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private var author: Author? = null
+    private var author: Author? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "publisher_id")
+    private var publisher: Publisher? = null,
+
 ) {
     fun setAuthor(author: Author?) {
         this.author = author

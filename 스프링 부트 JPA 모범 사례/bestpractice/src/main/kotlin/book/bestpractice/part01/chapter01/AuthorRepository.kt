@@ -25,8 +25,9 @@ interface AuthorRepository: JpaRepository<Author, Long> {
 
     @Transactional
     //@EntityGraph(value = "author-books-graph", type = EntityGraph.EntityGraphType.FETCH)
-    @EntityGraph(attributePaths = ["books"], type = EntityGraph.EntityGraphType.FETCH)
-
+    //@EntityGraph(attributePaths = ["books"], type = EntityGraph.EntityGraphType.FETCH)
+    //@EntityGraph(value = "author-books-publisher-graph", type = EntityGraph.EntityGraphType.FETCH)
+    @EntityGraph(attributePaths = ["books.author"], type = EntityGraph.EntityGraphType.FETCH)
     override fun findAll(): MutableList<Author>
 
     @Transactional
@@ -34,9 +35,9 @@ interface AuthorRepository: JpaRepository<Author, Long> {
     fun findByAgeLessThanOrderByNameDesc(age: Int): List<Author>
 
     @Transactional
-    @EntityGraph(value = "author-books-graph", type = EntityGraph.EntityGraphType.FETCH)
+    //@EntityGraph(value = "author-books-graph", type = EntityGraph.EntityGraphType.FETCH)
+    @EntityGraph(attributePaths = ["books.author"], type = EntityGraph.EntityGraphType.FETCH)
     @Query("select a from Author a where a.age > 20 and a.age < 40")
     fun fetchAllAgeBetween20And40(): List<Author>
-
 
 }

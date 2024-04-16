@@ -4,9 +4,17 @@ import jakarta.persistence.*
 
 @Entity
 @NamedEntityGraph(
-    name = "author-books-graph",
+    name = "author-books-publisher-graph",
     attributeNodes = [
         NamedAttributeNode("books")
+    ],
+    subgraphs = [
+        NamedSubgraph(
+            name = "publisher-subgraph",
+            attributeNodes = [
+                NamedAttributeNode("publisher")
+            ]
+        )
     ]
 )
 class Author (
