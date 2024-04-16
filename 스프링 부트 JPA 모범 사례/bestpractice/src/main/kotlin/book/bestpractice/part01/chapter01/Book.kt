@@ -20,6 +20,8 @@ class Book(
     @JoinColumn(name = "publisher_id")
     private var publisher: Publisher? = null,
 
+    private var price: Int = 0
+
 ) {
     fun setAuthor(author: Author?) {
         this.author = author
