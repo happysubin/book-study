@@ -1,5 +1,6 @@
 package book.bestpractice.part01.chapter10
 
+import book.bestpractice.part01.AbstractServiceTest
 import book.bestpractice.part01.chapter01.AuthorRepository
 import book.bestpractice.part01.chapter01.BookRepository
 import book.bestpractice.part01.chapter06.AppService
@@ -10,13 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
 
-@SpringBootTest
 class Chapter10Test @Autowired constructor(
     private val appService: AppService,
     private val authorRepository: AuthorRepository,
     private val bookRepository: BookRepository,
     private val entityManager: EntityManager
-) {
+): AbstractServiceTest() {
 
 
     @Transactional

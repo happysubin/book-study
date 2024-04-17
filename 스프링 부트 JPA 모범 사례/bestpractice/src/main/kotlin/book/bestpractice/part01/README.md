@@ -118,3 +118,38 @@ List 쿼리가 여러번 나간다. Set이 더 효율적.
 * Where를 사용하는 것은 소프트 삭제 구현에서 추천
 * Where가 Deprecated 되었으므로 @SQLRestriction를 사용해야함.
 
+# 항목 11. @MapsId를 통한 단방향/양방향 @OneToOne 최적화 방법
+
+
+### 단방향 @OneToOne
+
+부모 측이 지속적으로 또는 매번 자식 측을 필요로 한다면 새로운 쿼리가 추가되면서 성능이 저하될 수 있다. 
+
+### 양방향 @OneToOne
+
+양방향 @OneToOne의 주요 단점은 다음과 같이 부모를 가져올 때 확인할 수 있다.
+
+LAZY 연관관계임에도 Author를 가져오면 SELECT 문들이 트리거 된다. 항상 조회문 1개가 추가되는 것이다.
+부모엔티티 다음에 하이버네이트는 자식 엔터티도 가져온다.
+애플리케이션 부모만 필요한 경우에도 자식을 가져오는 것은 리소스 낭비이자 성능 저하를 초래한다.
+
+해결 방법은 부모 측에 Bytecode Enhancement와 @LazyToOne(LazyToOneOption.NO_PROXY)를 사용하는 것이다.
+또는 더 좋은 방법은 단방향 @OneToOne과 @MapsId를 사용하는 것이다.
+
+### @OneToOne을 구원하는 @MapsId
+
+![KakaoTalk_Photo_2024-04-17-21-29-59](https://github.com/happysubin/book-study/assets/76802855/c3baf825-6547-40b4-83b5-4add8b997c9e)
+
+@MapsId는 @ManyToOne 단방향 @OneToOne 연관관계에 적용할 수 있는 JPA 2.0 애노테이션이며 이를 통해 자식 테이블의 기본키 자체가 부모 테이블의 기본키를 참조하는 외래키가 될 수 있다.
+
+부모 엔티티는 양방향 @OneToOne이 필요하지 않으므로 이는 삭제.
+
+author_id가 author의 식별자로 설정되었다.
+이는 부모 테이블과 자식 테이블이 동일한 키를 가진 것을 의미한다.
+
+개발자는 이제 부모 식별자로 자식을 가져올 수 있다.
+
+
+## 항목 12: 단 하나의 연관관계만 Null이 아닌지 확인하는 방법
+
+BeanValidation을 통해 Null이 아닌지 확인하는 방법을 살펴봄
