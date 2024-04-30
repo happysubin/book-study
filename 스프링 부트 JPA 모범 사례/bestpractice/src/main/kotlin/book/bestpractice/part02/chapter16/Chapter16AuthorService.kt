@@ -1,15 +1,15 @@
-package book.bestpractice.part02.chapter17
+package book.bestpractice.part02.chapter16
 
 import org.springframework.stereotype.Service
 
 @Service
-class Chapter17AuthorService(
-    private val authorRepository: Chapter17AuthorRepository
+class Chapter16AuthorService(
+    private val authorRepository: Chapter16AuthorRepository
 ) {
 
     //새로운 Author를 만들고 데이터베이스에 저장하고, 이를 Write-Through 전략을 통해 2차 캐시에 보관한다.
     fun newAuthor() {
-        val author = Chapter17Author(name = "test", genre = "awesome", age = 33)
+        val author = Chapter16Author(name = "test", genre = "awesome", age = 33)
         authorRepository.save(author)
     }
 

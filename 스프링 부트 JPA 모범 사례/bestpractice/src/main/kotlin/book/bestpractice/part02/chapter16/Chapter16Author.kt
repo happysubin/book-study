@@ -1,4 +1,4 @@
-package book.bestpractice.part02.chapter17
+package book.bestpractice.part02.chapter16
 
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -11,7 +11,7 @@ import org.hibernate.annotations.Immutable
 @Entity
 @Immutable
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region = "Author")
-class Chapter17Author(
+class Chapter16Author(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
