@@ -1,7 +1,7 @@
 package book.bestpractice.part01.chapter01
 
 import jakarta.persistence.*
-import org.hibernate.annotations.SQLRestriction
+//import org.hibernate.annotations.SQLRestriction
 
 @Entity
 @NamedEntityGraph(
@@ -9,14 +9,14 @@ import org.hibernate.annotations.SQLRestriction
     attributeNodes = [
         NamedAttributeNode("books")
     ],
-    subgraphs = [
-        NamedSubgraph(
-            name = "publisher-subgraph",
-            attributeNodes = [
-                NamedAttributeNode("publisher")
-            ]
-        )
-    ]
+//    subgraphs = [
+//        NamedSubgraph(
+//            name = "publisher-subgraph",
+//            attributeNodes = [
+//                NamedAttributeNode("publisher")
+//            ]
+//        )
+//    ]
 )
 class Author (
     @Id
@@ -32,11 +32,11 @@ class Author (
     val books: MutableList<Book> = mutableListOf(),
 
     @OneToMany(cascade = [CascadeType.ALL], mappedBy = "author", orphanRemoval = true)
-    @SQLRestriction("price <= 20")
+    //@SQLRestriction("price <= 20")
     val cheapBooks: MutableList<Book> = mutableListOf(),
 
     @OneToMany(cascade = [CascadeType.ALL], mappedBy = "author", orphanRemoval = true)
-    @SQLRestriction("price > 20")
+    //@SQLRestriction("price > 20")
     val restOfBooks: MutableList<Book> = mutableListOf(),
 ) {
 
