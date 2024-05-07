@@ -78,3 +78,9 @@ https://stackoverflow.com/questions/62121172/how-to-enable-hibernate-bytecode-en
 * 더티 트래킹
 * 속성 지연 초기화
 * 연관 관계 관리
+
+## 항목 19. 불리언을 Yes/No로 매핑하는 방법
+
+본인도 자주 사용하는 AttributeConverter를 활용함. 애플리케이션에서는 boolean 활용, 데이터베이스에는 String을 varchar로 저장.
+
+참고로 @Enumerated 애노테이션이 달린 속성은 AttributeConverter를 적용할 수 없다.
