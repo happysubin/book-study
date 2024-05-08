@@ -84,3 +84,21 @@ https://stackoverflow.com/questions/62121172/how-to-enable-hibernate-bytecode-en
 본인도 자주 사용하는 AttributeConverter를 활용함. 애플리케이션에서는 boolean 활용, 데이터베이스에는 String을 varchar로 저장.
 
 참고로 @Enumerated 애노테이션이 달린 속성은 AttributeConverter를 적용할 수 없다.
+
+## 항목 20. 애그리거트 루트로부터 최적의 도메인 이벤트 발행
+
+스프링 레포지토리로 관리되는 엔티티는 __애그리거트 루트__ 라 한다.
+도메인 주도 설계에서 이 애그리거트 루트는 이벤트 또는 도메인 이벤트를 발행할 수 있는데, 스프링 데이터 Ingalls 릴리스부터 애그리거트 루트 별로 이벤트를 발행하는 것이 훨씬 쉬워졌다.
+
+스프링 데이터는 @DomainEvents 애노테이션과 함께 제공되며, 해당 발행을 가능한 한 쉽게 하고자 애그리거트 루트의 메서드에 사용된다.
+@DomainEvents 애노테이션을 갖는 메서드는 스프링 데이터에 의해 인식되며 리포지터리를 통해 엔티티가 저장될 때마다 자동으로 호출된다.
+@DomainEvents 외에도 스프링 데이터는 @AfterDomainEventPublication 애노테이션을 제공하는데, 발행 후 이벤트를 정리하고자 자동으로 호출돼야 하는 메서드를 지정한다.
+
+스프링 데이터는 Commons는 도메인 이벤트 등록을 지원하고 @DomainEvent와 @AfterDoimainEventPublish에 의해 내부적인 발행 메커니즘을 사용하는 편리한 템플릿 기반 클래스를 제공한다.
+이벤트들은 AbstractAggregateRoot#registerEvent() 메서드를 호출해 등록한다.
+등록된 이벤트는 스프링 데이터 리포지토리의 save 메서드 중 하나를 호출하면 발행되고 발행 후 초기화된다.
+
+동기식 실행과 비동기식 실행 로직을 찾아봄
+
+> 실행중인 트랜잭션이 없고 fallbackExecution이라는 파라미터가 true로 설정돼 있지 않으면 @TransactionalEventListener 애노테이션이 지정된 메서드는 실행되지 않는다.
+
