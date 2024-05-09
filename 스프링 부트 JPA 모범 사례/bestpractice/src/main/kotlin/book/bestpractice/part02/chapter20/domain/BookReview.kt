@@ -10,7 +10,7 @@ class BookReview(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
     val content: String,
-    val email: String,
+    var email: String,
 
     @Enumerated(EnumType.STRING)
     var status: ReviewStatus,
@@ -25,4 +25,10 @@ class BookReview(
     fun registerReviewEvent() {
         registerEvent(CheckReviewEvent(this))
     }
+
+    override fun toString(): String {
+        return "BookReview(id=$id, content='$content', email='$email', status=$status, book=$book)"
+    }
+
+
 }

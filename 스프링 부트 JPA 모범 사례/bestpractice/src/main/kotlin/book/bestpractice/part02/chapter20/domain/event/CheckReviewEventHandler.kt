@@ -3,6 +3,7 @@ package book.bestpractice.part02.chapter20.domain.event
 import book.bestpractice.part02.chapter20.domain.ReviewStatus
 import book.bestpractice.part02.chapter20.domain.repository.BookReviewRepository
 import jdk.jfr.TransitionTo
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
@@ -14,9 +15,9 @@ class CheckReviewEventHandler(
     private val bookReviewRepository: BookReviewRepository
 ) {
 
-    //@Async
+    @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @TransactionalEventListener
+    @TransactionalEventListener //성능 저하 문제가 있을 수 있다. 커넥션이 너무 늦게 반환된다.
     fun handleCheckReviewEvent(event: CheckReviewEvent) {
         val bookReview = event.bookReview
         println("start")
