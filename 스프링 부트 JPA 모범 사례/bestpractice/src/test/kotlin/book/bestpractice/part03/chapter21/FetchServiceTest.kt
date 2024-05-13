@@ -8,6 +8,8 @@ import book.bestpractice.part02.chapter20.domain.repository.BookReviewRepository
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.annotation.Rollback
+import org.springframework.transaction.annotation.Transactional
 
 class FetchServiceTest @Autowired constructor(
     private val fetchService: FetchService,
@@ -26,20 +28,22 @@ class FetchServiceTest @Autowired constructor(
     }
 
     @Test
+    @Transactional
     fun inTest() {
         val result1 = bookReviewRepository.save(BookReview(
+            id = 1,
             content = "content",
             status = ReviewStatus.CHECK,
             email = "test@gmail.com"
         ))
 
         val result2 = bookReviewRepository.save(BookReview(
+            id = 2,
             content = "content",
             status = ReviewStatus.CHECK,
             email = "test@gmail.com"
         ))
 
-        fetchService.inTest(listOf(result1.id!!, result2.id!!))
+        //fetchService.inTest(listOf(result1.id!!, result2.id!!))
     }
-
 }

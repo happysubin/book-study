@@ -7,7 +7,7 @@ import org.springframework.data.domain.AbstractAggregateRoot
 @Entity
 class BookReview(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
     val content: String,
     var email: String,
