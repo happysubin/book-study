@@ -6,10 +6,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Scanner;
 
-public class SimpleEchoClient {
+public class SimpleEchoClientCopy {
 
     public static void main(String args[]) {
         System.out.println("Simple Echo Client");

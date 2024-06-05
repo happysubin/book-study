@@ -43,3 +43,18 @@ URLConnection 클래스는 애플리케이션과 URL 인스턴스 간의 연결�
 
 멀티캐스팅은 주기적으로 그룹에 메시지를 전송해야 할 경우에 유용한 기술이다.
 멀티캐스팅은 UDP 서버와 하나 이상의 UDP 클라이언트를 사용한다.
+
+## 멀티 스레드 서버
+
+현재 구현은 한 번에 다수의 클라이언트 접속이 가능하다.
+다수의 스레드가 생성될 수 있으므로 성능 저하 문제가 있을 수도 있다.
+
+## 보안
+
+보안 서버 소켓을 인스턴스화하기 위해 SSLServerSocketFactory 클래스를 사용
+
+ssh 키 생성
+
+```shell
+keytool -genkey -alias mykey -keyalg RSA -keystore keystore.jks -keysize 2048
+```
