@@ -22,9 +22,9 @@ java {
 
 hibernate {
 	enhancement {
-		enableLazyInitialization = true
-		enableDirtyTracking = true
-		enableAssociationManagement = true
+		enableLazyInitialization = true  //속성 지연 로딩
+		enableDirtyTracking = true //변경 추적
+		enableAssociationManagement = true //양방향 연관관계 동기화
 		enableExtendedEnhancement = false
 	}
 }

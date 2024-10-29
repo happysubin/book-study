@@ -124,3 +124,63 @@ public void updateAuthor(Author author) {
 HTTP 요청 사이에는 저자가 생각하는 시간이 있는데, 이에 대해선 추후에 더 살펴본다.
 
 아마도 비관적 락, 낙관적 락에 대해 얘기하지 않을까..? (추측)
+
+
+## 항목 23: 하이버네이트 Bytecode Enhancement를 통한 엔터티 속성 지연 로딩 방법
+
+
+기본적으로 엔티티 속성들은 즉시 로드되기 때문에 용량이 많은 바이트 데이터(예: 이미지) 등은 사용하지 않는다면 엔티티를 로드할때마다 가져오는 것은 제거돼야 할 성능 저하 요소다.
+위 문제를 해결하려면 속성 지연 로딩을 사용하면 된다.
+
+속성 지연을 사용하려면 몇 가지 단계를 따라야 한다.
+
+1. 하이버네이트 Bytecode Enhancement 플러그인을 추가해야한다.
+2. enableLazyInitialization 설정을 통해 지연 초기화를 활성화해 엔티티 클래스의 바이트 코드를 계측하도록 하이버네이트에게 지시한다.
+3. build.gradle에 아래와 같은 설정을 추가한다.
+4. @Basic(fetch = FetchType.LAZY)로 지연로딩돼야 하는 엔티티 속성에 어노테이션을 지정한다.
+
+```
+hibernate {
+	enhancement {
+		enableLazyInitialization = true  //속성 지연 로딩
+		enableDirtyTracking = true //변경 추적
+		enableAssociationManagement = true //양방향 연관관계 동기화
+		enableExtendedEnhancement = false 
+	}
+}
+```
+
+위와 같은 4단계를 거치고 엔티티를 조회하면 지연로딩을 설정한 컬럼은 가져오지 않는 것을 확인할 수 있다.
+
+### 속성 지연 로딩과 N+1
+
+N + 1은 필요 예상보다 더 많은 SQL문이 시행되면서 발생하는 성능 저하 문제를 나타낸다.
+즉 필요한 것보다 더 많은 데이터베이스 호출을 수행하면 CPU, RAM 메모리, 디비 커넥션등과 같은 리소스가 소비된다.
+
+N + 1을 회피하려면 서프 엔티티 기술을 활용하거나 DTO로 지연 로딩 속성을 명시적으로 처리하는 SQL SELECT을 트리거해 N + 1 성능 저하를 피할 수 있다.
+
+```java
+
+import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.Query;
+
+public interface AuthorDto {
+    String getName();
+
+    byte[] getAvatar();
+}
+
+@Transactional(readOnly = true)
+@Query("SELECT a.name AS name, a.avatar AS avatar FROM Author a WHERE a.age >= ?1")
+List<AuthorDto> findDtoByAgeGreaterThanEqual(int age);
+
+```
+
+보통 OSIV를 비활성화화면 지연 초기화 예외가 발생할 수 있다.
+그래도 OSIV는 비활성화하는 편이 좋다.
+
+그래서 제일 간단한 해결 방법은 직렬화 이전에 기본 값을 명시적으로 정하거나, 트랜잭션 안에서 데이터를 로드하는 것이다.
+또는 @JsonInclude(Include.NON_DEFAULT) 설정을 주면 직렬하를 생략한다. 책에서 나온 방법은 @JsonFilter를 활용하는 법도 있다.
+
+역시 조회는 그냥 프로젝션을 사용하는 것이 젤 맘 편한 것 같다.
+
