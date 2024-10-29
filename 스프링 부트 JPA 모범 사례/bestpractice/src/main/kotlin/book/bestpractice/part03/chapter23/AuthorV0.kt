@@ -2,7 +2,7 @@ package book.bestpractice.part03.chapter23
 
 import jakarta.persistence.*
 
-class Author (
+class AuthorV0 (
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

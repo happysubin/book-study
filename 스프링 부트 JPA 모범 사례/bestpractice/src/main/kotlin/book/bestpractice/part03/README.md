@@ -184,3 +184,22 @@ List<AuthorDto> findDtoByAgeGreaterThanEqual(int age);
 
 역시 조회는 그냥 프로젝션을 사용하는 것이 젤 맘 편한 것 같다.
 
+## 항목 24: 서브 엔티티를 통한 엔티티 속성 지연 로딩 방법
+
+항목 23에 대한 다른 해결 방법을 제시한다.
+
+id, age, name, genre는 즉시 로딩하고 avatar는 지연 방식으로 처리하는 것을 목적으로 한다.
+이 접근 방법은 엔티티를 서브엔티티로 분리하는 것을 기반으로 한다.
+
+소스 코드 chapter 24를 참고.
+
+AuthorShallow는 id, age, name, genre를 즉시 가져오는 반면 AuthorDeep는 이 4가지 속성과 avatar를 추가로 가져온다.
+
+__결론적으로 avatar는 필요에 따라 불러 올 수 있다.__
+
+### 결론
+
+* 하이버네이트는 지연 로딩 속성을 지원하지만 이를 위해선 Bytecode Enhancement가 필요하고 OSIV와 Jackson 직렬화 문제를 처리해야 한다.
+* 반면 서브 엔티티를 사용하는 것은 Bytecode Enhancement가 필요하지 않고 여러 문제가 발생하지 않기 때문에 더 나은 대안이 될 수 있다.
+
+개인적인 결론은 프로젝션을 사용하자..!!!!!!
