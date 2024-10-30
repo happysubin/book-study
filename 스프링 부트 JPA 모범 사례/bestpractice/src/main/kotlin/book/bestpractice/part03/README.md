@@ -251,6 +251,42 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
 }
 ```
 
+## 항목 27: 엔티티의 일부 또는 외부 가상 속성을 통한 스프링 프로젝션 보완 방법
 
+스프링 프로젝션은 도메인 모델의 일부거나 그렇지 않은 virtual 속성으로 보완될 수 있다.
+일반적으로 도메인 모델의 일부가 아닌 경우 SpEL 표현식을 통해 런타임에 반영도니다.
 
+도메인 모델에서 이름이 일치하지 않고 실행 시에 반영되는 결과를 반환하는 메서드를 갖는 인터페이스 기반 스프링 프로젝션을 인터페이스 기반 열린 프로젝션이라 한다.
+
+예를 들어 다음 스프링 프로젝션은 3개의 virtual 속성을 포함하고 있다.
+
+```java
+public interface AuthorNameAge {
+    String getName();
+    
+    @Value("#{target.age}")
+    String year();
+    
+    @Value("#{ T(java.lang.Math).random() * 10000}")
+    int rank();
+    
+    @Value("5")
+    String books();
+}
+```
+
+스프링 프로젝션에서 AuthorNameAge는 @Value와 스프링 SpEL을 사용해 도메인 모델의 추가 속성을 지정한다.
+
+```java
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+@Repository
+@Transactional(readOnly = true)
+public interface AuthorRepository extends JpaRepository<Author, Long> {
+    @Query("SELECT a.name AS name, a.age AS age FROM Author a WHERE a.age >= ?1")
+    List<AuthorNameAge> fetchByAge(int age);
+}
+```
 
