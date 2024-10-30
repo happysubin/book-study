@@ -214,3 +214,43 @@ CPU 리소스와 메모리를 아끼기 위해 데이터를 수정할 계획이 
 
 인터페이스 기반의 프로젝션 코드와 클래스 기반 프로젝션, 동적 스프링 프로젝션 사용 방법을 살펴봄. 
 
+
+## 항목 26: 스프링 프로젝션에서 엔티티를 추가하는 방법
+
+양방향 지연 @OneToMany 연관관계를 갖는 Autor와 Book 엔티티를 고려해보자.
+
+```java
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+public interface BookstoreDto {
+    Author getAuthor();
+    String getTitle();
+}
+
+@Repository
+@Transactional(readOnly = true)
+public interface AuthorRepository extends JpaRepository<Author, Long> {
+
+    @Query("SELECT a AS author, b.title AS title FROM Author a JOIN a.books b")
+    List<BookstoreDto> fetchAll();
+}
+```
+
+다음은 Author과 Book 엔티티 간 구체화된 연관관계가 없는 경우를 생각해보자.
+
+```java
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+@Transactional(readOnly = true)
+public interface AuthorRepository extends JpaRepository<Author, Long> {
+    @Query("SELECT a AS author, b.title AS title" + "FROM Author a JOIN Book b ON a.genre=genre ORDER BY a.id")
+    List<BookstoreDto> fetchAll();
+}
+```
+
+
+
+
