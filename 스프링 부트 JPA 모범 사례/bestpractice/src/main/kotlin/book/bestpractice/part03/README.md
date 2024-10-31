@@ -290,3 +290,47 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
 }
 ```
 
+## 항목 28:  *-to-One 연관관계를 포함하는 스프링 프로젝션의 효율적 로딩 방법
+
+__항목 28까지 프로젝션 관련이라 다음에 살펴보자. 실무에서 프로젝션은 전부 Querydsl을 쓰고 있기 때문. 추후 살펴보자__
+
+
+## 항목 39. 단일 SELECT로 부모의 연관관계를 효율적으로 가져오는 방법
+
+두 엔티티 Author과 Book(1: N)이 양방향 연관관계를 가지고 있다고 가정한다.
+
+그럼 다음과 같이 두 조회를 실행해보자.
+
+* 도서를 포함해 이름으로 저자 가져오기
+* 저자를 포함해 ISBN으로 도서 가져오기
+
+이런 경우에는 JOIN FETCH 또는 JOIN + DTO를 통해 쿼리 레벨에서 연관 관계를 가져와야하며, JOIN FETCH 가 옳은 선택이다.
+
+```java
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+@Repository
+@Transactional(readOnly = true)
+public interface AuthorRepository extends JpaRepository<Author, Long> {
+    @Query(value = "SELECT a FROM Author a JOIN FETCH a.books WHERE a.name = ?1")
+    Author fetchAuthorWithBooksByName(String name);
+}
+
+@Repository
+@Transactional(readOnly = true)
+public interface BookRepository extends JpaRepository<Book, Long> {
+    @Query(value = "SELECT b FROM Book b JOIN FETCH b.author WHERE b.ibsn = ?1")
+    Author fetchBookWithAuthorByIsbn(String isbn);
+}
+```
+
+참고로 테이블 조인은 카테시안곱 또는 큰 결과 세트가 생성될 수도 있다.
+반면 FetchType.LAZU는 추가 쿼리(N+1)을 유발한다.
+100명의 저자가 있고 각각 5권의 도서를 저술한 경우 카테시안 곱 쿼리는 100 * 5 = 500개의 행을 가져온다.
+반면에 FetchType.LAZY를 사용하면 100개의 추가 쿼리가 발생한다.
+여러 일대다 또는 다대다 연관관계를 가져오면 복잡한 카테시안 곱 또는 많은 수의 추가 쿼리가 발생하는 것이다.
+많은 수의 데이터베이스 처리보다 큰 카테시안 곱을 갖는 것이 좋다.
+그럼에도 몇 개의 쿼리만으로 큰 카테시안 곱을 피할 수 있다면 해당 쿼리를 사용해야 한다.
