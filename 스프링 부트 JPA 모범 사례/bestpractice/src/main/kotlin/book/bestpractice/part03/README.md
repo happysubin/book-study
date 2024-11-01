@@ -334,3 +334,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 여러 일대다 또는 다대다 연관관계를 가져오면 복잡한 카테시안 곱 또는 많은 수의 추가 쿼리가 발생하는 것이다.
 많은 수의 데이터베이스 처리보다 큰 카테시안 곱을 갖는 것이 좋다.
 그럼에도 몇 개의 쿼리만으로 큰 카테시안 곱을 피할 수 있다면 해당 쿼리를 사용해야 한다.
+
+
+## 항목 40. JOIN과 FETCH 방법
+
