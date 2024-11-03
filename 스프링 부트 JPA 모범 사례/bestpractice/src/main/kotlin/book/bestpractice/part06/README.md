@@ -106,3 +106,93 @@ readOnly가 true라면 엔티티를 가져온 후 하이드레이티드/로드�
 * @Transactional이 private, protected, package-protected 메서드에 추가되면 무시된다.
 * @Transactional이 호출된 동일한 클래스에 정의된 메서드에 추가됐다. -> 내부 함수 호출로 인해 프록시를 호출하는게 아니여서 트랜잭션이 무시된다.
 
+## 항목 63. 트랜잭션 타임아웃 설정 및 롤백이 예상대로 작동하는지 확인하는 방법
+
+스프링은 트랜잭션 타임아웃을 명시적으로 설정하기 위한 여러 방법을 지원한다.
+가장 널리 사용되는 방법은 다음과 같은 간단한 서비스 메서드에서와 같이 @Transactional 애노테이션의 타임아웃 요소를 사용하는 것이다.
+
+```java
+
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional(timeout = 10)
+public void newAuthor() {
+    Author author = new Author();
+    author.setAge(23);
+    author.setGenre("Anthology");
+    author.setName("Mark Janel");
+    
+    
+    Thread.sleep(15_000);
+    
+    authorRepository.saveAndFlush(author);
+}
+
+```
+
+위 코드는 현재 스레드가 트랜잭션 커밋을 15초 동안 지연하고 트랜잭션이 10 초 후에 타임아웃이 되기에 관련 예외 발생과 트랜잭션 롤백이 나타날 것으로 예상할 수 있다.
+그러나 예상대로 작동하지 않는다. 대신 트랜잭션은 15초 후에 커밋된다.
+
+다른 시도는 2개의 동시 트랜잭션을 사용하는 것으로, 트랜잭션 A는 트랜잭션 B가 타임아웃될 정도로 오랫동안 배타적 잠금을 유지하는 것이다.
+이 방법도 가능하지만 더 간단한 방법이 있다.
+
+RDBMS에 고유한 SQL SLEEP 기능을 사용하는 트랜잭션 서비스 메서드에 SQL 쿼리를 넣기만 하면 된다.
+대부분의 RDBMS에는 SLEEP 기능이 있다.
+
+SLEEP 함수는 지정된 시간 동안 현재 명령문을 일시 중지해 트랜잭션을 일시적으로 멈춘다.
+트랜잭션 타임아웃보다 긴 시간 동안 트랜잭션을 일시 중지하면 트랜잭션이 만료되고 롤백돼야 한다.
+
+다음과 같은 리포지터리는 타임아웃이 10초로 설정돼 있는 동안 현재 트랜잭션을 15초 동안 지연시키는 SELECT() 기반 쿼리를 정의하고 있다.
+
+```java
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+@Repository
+public interface AuthorRepository extends JpaRepository<Author, Long> {
+
+    @Query(value = "SELECT SLEEP(15)", nativeQuery = true)
+    void sleepQuery();
+}
+
+
+@Transactional(timeout = 10)
+public void newAuthor() {
+    Author author = new Author();
+    author.setAge(23);
+    author.setGenre("Anthology");
+    author.setName("Mark Janel");
+
+
+    authorRepository.sleepQuery(15_000);
+
+    authorRepository.saveAndFlush(author);
+}
+```
+
+#### 트랜잭션 및 쿼리 타임아웃 설정
+
+@Transactional의 timeout 항목 지정은 메서드 또는 클래스 수준에서 트랜잭션 타임아웃을 설정하는 데 매우 편리한 방법이다.
+또는 다음과 같이 application.properties의 spring.transaction.default-timeout 속성을 통해 전역 타임아웃을 명시적으로 설정할 수 있다.
+
+```
+spring.transaction.default-timeout=10
+```
+
+쿼리 수준에서는 2가지 힌트를 통해 타임아웃을 설정할 수도 있다.
+
+#### 트랜잭션이 롤백됐는지 확인
+
+트랜잭션이 시간 초과되면 롤백해야 하며, 특정 도구를 통해 데이터베이스 레벨에서 또는 애플리케이션 로그로 이를 확인할 수 있다.
+먼저 다음과 같이 application.properties에 트랜잭션 로깅을 활성화해보자.
+
+아래와 같이 트랜잭션 로깅을 활성화해보자.
+
+```
+logging.level.ROOT=INFO
+logging.level.org.springframework.orm.jpa=DEBUG
+logging.level.org.springframework.transaction=DEBUG
+```
+
+이제 만료된 트랜잭션은 다음과 같이 확인할 수 있다.
