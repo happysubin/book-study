@@ -196,3 +196,167 @@ logging.level.org.springframework.transaction=DEBUG
 ```
 
 이제 만료된 트랜잭션은 다음과 같이 확인할 수 있다.
+
+## 항목 64. 리포지터리 인터페이스에서 @Transactional을 사용하는 이유와 방법
+
+일반적으로 데이터베이스 속도는 초당 트랜잭션 수로 표현되는 트랜잭션 처리량으로 주어진다.
+이는 데이터베이스가 장기 실행 트랜잭션보다 많은 짧은 트랜잭션을 수용하도록 구축됨을 의미한다.
+짧은 트랜잭션을 처리하고자 데이터 액세스 레이어 성능을 끌어 올리려면 이 항목에 제시되는 기술을 적용해보자
+
+#### 인터페이스 리포지터리의 쿼리 메서드는 기본적으로 트랜잭션 콘텍스트에서 실행되는가?
+
+결론부터 말하면 읽기 전용 쿼리에도 명시적 트랜잭션을 사용하는 것이 좋다.
+
+```
+또한 스프링은 사용자 정의 쿼리 메서드에 대해 기본 트랜잭션 콘텍스트를 제공하지 않는다.
+반면 내장 쿼리 메서드(ex save(), findById(), delete())에는 문제가 없다.
+이들은 확장된 내장 리포지터리 인터페이스를 상속하며 기본 트랜잭션 콘텍스트와 함께 제공된다.
+
+```
+
+대부분의 경우 트리거된 SQL문이 ACID 특성이 있는 트랜잭션에서 작업 단위로 실행된다는 가정하에 쿼리 메서드 호출을 포함하는 서비스 메서드를 구현한다.
+
+그러나 분명히 이 가정은 아래 사례에는 유효하지 않다. 
+
+```java
+public void callFetchByNameAndDeleteByNeGenreMethods() {
+    Author author = authorRepository.fetchByName("subin");
+    authorRepository.deleteByNeGenre(author.getGenre());
+}
+```
+
+AuthorRepository 쿼리 메서드에 대해 트랜잭션을 제공하지 않기 때문에 예외를 발생시킨다.
+
+#### 그럼 단순히 서비스 메서드 수준에서 @Transactional을 추가하는 것이 옳은가?
+
+위 코드를 다음과 같이 수정하면 예외가 발생하지 않는다.
+
+```java
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional
+public void callFetchByNameAndDeleteByNeGenreMethods() {
+    Author author = authorRepository.fetchByName("subin");
+    authorRepository.deleteByNeGenre(author.getGenre());
+}
+```
+
+장기 실행 트랜잭션인 경우를 고려해보면 항상 서비스 메서드에 @Transactional을 붙이는 것은 옳지 않다.
+
+#### 그렇다면 리포지터리 인터페이스로 @Transactional을 이동하자
+
+개발자가 직접 정의한 쿼리 메서드의 경우 레포지토리에 @Transactional를 정의하면 트랜잭션 예외가 발생하지 않는다.
+쿼리 메서드에 @Transactional를 정의해도 마찬가지로 예외가 발생하지 않는다.
+
+#### 그러나 서비스 메서드에서 더 많은 쿼리 메서드를 호출하려면 어떻게 해야할까? ACID를 잃는가?
+
+논리적 트랜잭션을 정의하는 여러 SQL문을 생성하는 여러 쿼리 메서드를 호출해야 할 가능성이 높다.
+@Transactional이 없는 서비스 메서드에서 여러 쿼리 메서드를 호출하면 이 작업 묶음에 단위에 대한 ACID 특징이 손실된다.
+따라서 서비스 메서드에도 @Transactinal을 추가해야 한다.
+
+먼저 AuthorRepository 리포지토리 인터페이스를 구성하는 가장 좋은 방법을 살펴보자. 다음 조언을 따르자.
+
+* 쿼리 메서드에 대해서도 @Transactional(readOnly = true)를 사용하는 것이 좋다. 
+* 아무 설정도 없는 @Transactional을 조작하는 메서드에 추가하거나 해당 인터페이스에 다시 지정한느 것을 확실히 해야 한다.
+* 인터페이스에 @Transactional(readOnly = true)를 정의하고 개별 메서드에 @Transactional를 정의하자.
+
+그럼 제일 중요한 장기 트랜잭션은 어떡해야할까?
+
+* 코드 리팩토링을 하고 구현을 재설계해 더 짧은 트랜잭션을 얻어야 한다.
+* 참고로 하이버네이트 5.2.10 이상을 사용하면 데이터베이스 커넥션 지연 획득이 가능하다. 이건 위에 설정값이 존재한다.
+* 일반적인 규칙으로, 쿼리 메서드 호출로 데이터베이스와 상호작용하지 않는 무거운 비즈니스로직을 중간에 처리하는 트랜잭션을 사용하지 않도록 노력해야 한다.
+* 이로 인해 시간이 많이 걸리고 이해, 디버깅, 리팩토링, 리뷰가 어려운 장기 실행 트랜잭션과 복잡한 서비스 메서드가 될 수 있다.
+
+#### 그럼 커넥션 획득을 지연하면 리포지터리 인터페이스에 @Transactional을 사용하지 않아도 되는가?
+
+가능하면 커넥션 획득을 지연시키자.
+그런 다음 대부분의 경우 리포지터리 인터페이스가 아닌 서비스 수준에서만 @Transactinal을 사용할 수 있다.
+그러나 이는 읽기 전용 데이터베이스 작업을 하는 서비스 메서드에 @Transactional(readOnly = true) 추가를 꾸준히 잊어버리는 경향이 있음을 의미한다.
+
+또한 트랜잭션의 ACID 설정이 필요 없다면 리포지토리 쿼리 메서드에만 @Transactional을 적용하는 것도 좋은 방법이다.
+
+#### 간단하고 일반적인 3가지 시나리오
+
+__데이터베이스와 상호작용하지 않는 코드에서 발생한 예외로 인한 서비스 메서드 롤백__
+
+```java
+public void foo() {
+    // DML 문
+    // 데이터베이스와 상호작용하지 않지만
+    // RuntimeException이 발생하기 쉬운 작업 수행
+}
+```
+
+데이터베이스와 상호작용하지 않는 강조된 코드 부분에서 런타임 예외가 발생하면 현재 트랜잭션을 롤백해야한다.
+첫 번째 유혹은 이 서비스 메서드에 @Transactional을 지정하는 것이다.
+이런 시나리오는 @Transactional(rollbackFor = Exception.class)를 사용하는 것이 체크 예외에 대해서도 일반적으로 사용된다.
+
+그러나 @Transactional을 서비스 메서드에 추가하기로 결정하기 전에 다시 한번 생각해보는 것이 좋다.
+다른 해결책이 있을지도 모른다.
+예를 들어 동작에 영향을 주지 않고 작업 순서만 다음과 같이 변경할 수 있다.
+
+```java
+public void foo() {
+    // 데이터베이스와 상호작용하지 않지만
+    // RuntimeException이 발생하기 쉬운 작업 수행
+    // DML문을 트리거하는 쿼리 메서드 호출
+}
+```
+
+이제 이 서비스 메서드에는 @Transactional 애노테이션을 지정할 필요가 없다.
+데이터베이스와 상호작용하지 않는 작업에서 RuntimeException이 발생해도 save()는 호출되지 않으므로 데이터베이스 호출을 하지 않는다.
+
+더욱이 이런 작업에 시간이 많이 걸리는 경우 save() 메서드에 대해 열린 트랜잭션 기간에 영향을 주지 않는다.
+최악의 시나리오에서는 작업 순서를 변경할수 없으며 작업은 시간이 많이 소요되는 것이다.
+설상 가상으로 애플리케이션에서 많이 호출되는 메서드일 수 있다.
+이런 상황에서는 서비스 메서드가 장기 실행 트랜잭션을 발생시키는데, 서비스 메서드에 @Transactional 애노테이션을 추가하지 않도록 해결 방법을 재설계해야 한다.
+
+__전이와 @Transactional__
+
+```java
+public void fooAndBuzz() {
+    Foo foo = new Foo();
+    
+    Buzz buzz1 = new Buzz();
+    Buzz buzz2 = new Buzz();
+    
+    foo.addBuzz(buzz1);
+    foo.addBuzz(buzz2);
+    
+    fooRepository.save(foo);
+}
+```
+
+위와 같은 로직에서도 서비스 메서드에 @Transactional을 붙일 필요가 없다. 3개의 인서트문이 실행돼도 1개라도 실패하면 롤백된다.
+
+__조회 > 수정 > 저장 및 중간의 장기 실행 작업__
+
+```java
+public void callSelectModifyAndSave() {
+    Foo foo = fooRepository.findBy...(...); //단기 트랜잭션
+    
+    //foo 데이터를 사용하는 장기 실행 작업
+    
+    foo.setFooProperty(...);
+    fooRepository.save(foo); //단기 트랜잭션
+}
+```
+
+이런 경우는 서비스 메서드에 @Transactional을 거는 것보다 짧게 2개의 트랜잭션을 가져가는 것이 유리하다.
+위 두 메서드가 모두 버전 기반 낙관적 잠금 또는 재시도 메커니즘에 의존할 수 있다. 이 메서드는 @Transactional 애노테이션이 없기 때문에 아래와 같이 @Retry를 적용하면 된다.
+
+```java
+import org.springframework.dao.OptimisticLockingFailureException;
+
+@Retry(times = 10, on = OptimisticLockingFailureException.class)
+public void callSelectModifyAndSave() {
+    Foo foo = fooRepository.findBy...(...); //단기 트랜잭션
+
+    //foo 데이터를 사용하는 장기 실행 작업
+
+    foo.setFooProperty(...);
+    fooRepository.save(foo); //단기 트랜잭션
+}
+```
+
+위 방법이 장기 실행 트랜잭션보다 훨씬 낫다.
