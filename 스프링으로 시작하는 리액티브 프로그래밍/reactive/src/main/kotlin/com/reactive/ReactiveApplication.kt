@@ -7,5 +7,6 @@ import org.springframework.boot.runApplication
 class ReactiveApplication
 
 fun main(args: Array<String>) {
+	System.setProperty("reactor.netty.ioWorkerCount", "1")
 	runApplication<ReactiveApplication>(*args)
 }
