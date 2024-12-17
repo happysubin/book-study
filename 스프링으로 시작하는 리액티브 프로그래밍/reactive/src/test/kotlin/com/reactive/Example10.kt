@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 import reactor.core.publisher.Flux
 import reactor.core.scheduler.Schedulers
 
-class Example10_1 {
+class Example10 {
 
     @Test
     fun example10_1() {
